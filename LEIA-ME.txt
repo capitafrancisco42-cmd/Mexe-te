@@ -1,0 +1,29 @@
+MEXE-TE  |  guia de treino (aplicação instalável)
+Criada por Francisco Capita
+
+O QUE ESTÁ NESTA PASTA
+  index.html               a aplicação
+  manifest.webmanifest     dados de instalação (nome, ícones, cores)
+  sw.js                    faz a app funcionar sem internet depois da primeira abertura
+  icon-*.png, apple-*.png  ícones
+
+1) COLOCAR ONLINE (grátis, 2 minutos)
+  Precisa de um endereço https. Exemplos:
+  - Netlify Drop (app.netlify.com/drop): arrasta esta pasta para a página.
+  - GitHub Pages ou Cloudflare Pages: carrega os ficheiros e ativa o alojamento.
+  No fim recebes um link, por exemplo https://mexe-te.netlify.app
+
+2) INSTALAR NO ANDROID
+  Abre o link no Chrome, toca no menu (3 pontos) e escolhe
+  "Instalar aplicação" (ou "Adicionar ao ecrã inicial").
+
+3) INSTALAR NO iPHONE / iPAD
+  Abre o link no Safari, toca em Partilhar e escolhe
+  "Adicionar ao ecrã principal".
+
+A app abre em ecrã inteiro, com ícone próprio, e guarda o teu plano no telemóvel.
+
+4) LOJAS (Google Play e App Store)
+  Se quiseres publicar nas lojas, esta pasta serve de base para embrulhar a app
+  com Capacitor ou PWABuilder. Isso exige um computador com Android Studio (Google Play)
+  e um Mac com Xcode (App Store), mais contas de programador nas duas lojas.

@@ -1,0 +1,1288 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="author" content="Francisco Capita">
+<title>Mexe-te: guia de treino</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2438E0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mexe-te">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#F2F4FF; --surface:#FFFFFF; --ink:#0F1A4A; --muted:#4B5686; --line:#D9DEF7;
+  --hero:#2438E0; --accent:#FFD23F; --mint:#7ADFC0; --pink:#FF7DB8;
+  --focus:#2438E0; --tab-on:#2438E0; --tab-bg:#E3E7FF; --navy:#0F1A4A;
+  --f-display:"Anybody","Arial Black",system-ui,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A1130; --surface:#131C48; --ink:#EDF0FF; --muted:#A9B3E0; --line:#26326B;
+    --focus:#FFD23F; --tab-on:#C4CBFF; --tab-bg:#222E6B; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A1130; --surface:#131C48; --ink:#EDF0FF; --muted:#A9B3E0; --line:#26326B;
+  --focus:#FFD23F; --tab-on:#C4CBFF; --tab-bg:#222E6B; color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+.app{max-width:640px;margin:0 auto;padding-bottom:112px}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.hero :focus-visible,.timer-panel :focus-visible{outline-color:var(--accent)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.view[hidden]{display:none}
+
+/* Hero */
+.hero{margin:10px 10px 0;padding:18px 18px 20px;border-radius:28px;background:var(--hero);color:#fff}
+.brand{display:flex;align-items:center;gap:8px;font:800 18px/1 var(--f-display);font-variation-settings:"wdth" 110,"wght" 800}
+.brand .by{margin-left:auto;font:500 13px var(--f-body);font-variation-settings:normal;opacity:.92}
+.brand svg{width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+#hl{margin:22px 0 10px;height:118px;display:flex;align-items:flex-end;white-space:nowrap;font-family:var(--f-display);line-height:.9;letter-spacing:-.01em;font-weight:400}
+#hlText{display:inline-block;font-size:100px;font-weight:800;font-variation-settings:"wdth" 50,"wght" 100}
+.blurb{margin:0 0 18px;min-height:3.1em;max-width:36ch;color:rgba(255,255,255,.94)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{appearance:none;border:1.5px solid rgba(255,255,255,.55);background:transparent;color:#fff;font:600 14px/1 var(--f-body);padding:10px 14px;border-radius:999px;cursor:pointer;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--navy)}
+
+/* Controls */
+.controls{padding:20px 16px 4px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.seg button{border:0;background:transparent;color:var(--ink);font:700 15px var(--f-body);padding:12px 8px;border-radius:12px;cursor:pointer;min-height:46px}
+.seg button[aria-pressed="true"]{background:var(--hero);color:#fff}
+.filters{display:grid;gap:12px;margin-top:14px}
+.search{display:flex;align-items:center;gap:10px;padding:0 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;min-height:48px}
+.search:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+.search svg{width:20px;height:20px;flex:none;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round}
+.search input{flex:1;min-width:0;min-height:46px;border:0;outline:none;background:transparent;color:var(--ink);font:500 16px var(--f-body)}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{appearance:none;border:0;background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line);font:600 14px/1 var(--f-body);padding:10px 14px;border-radius:999px;cursor:pointer;min-height:40px}
+.pill[aria-pressed="true"]{background:var(--ink);color:var(--bg);box-shadow:none}
+.count{margin:14px 0 0;color:var(--muted);font-size:14px}
+
+/* List */
+.list{display:grid;gap:10px;padding:8px 16px 0}
+.item{--lc:var(--mint);position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-left:8px solid var(--lc);border-radius:16px}
+.item.lvl2{--lc:var(--accent)}
+.item.lvl3{--lc:var(--pink)}
+.item-head{appearance:none;display:flex;align-items:center;gap:12px;width:100%;margin:0;padding:15px 14px 15px 14px;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
+.item-main{flex:1;min-width:0;display:grid;gap:2px}
+.item-name{font:700 21px/1.15 var(--f-display);font-variation-settings:"wdth" 95,"wght" 700}
+.item-zone{color:var(--muted);font-size:14px}
+.saved-dot{display:none;width:9px;height:9px;margin-left:8px;border-radius:50%;background:var(--hero);vertical-align:middle}
+.item.saved .saved-dot{display:inline-block}
+.lvl-tag{flex:none;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--lc);color:var(--navy)}
+.chev{flex:none;width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.item.open .chev{transform:rotate(180deg)}
+.panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.item.open .panel{grid-template-rows:1fr}
+.panel-inner{min-height:0;overflow:hidden}
+.panel-body{padding:2px 16px 18px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px}
+.facts div{background:var(--bg);border-radius:12px;padding:10px 12px}
+.facts .wide{grid-column:1/-1}
+.facts dt{font-size:13px;color:var(--muted)}
+.facts dd{margin:2px 0 0;font-weight:600;font-size:15px}
+.meter{display:inline-flex;gap:4px;margin-top:5px}
+.meter i{width:18px;height:8px;border-radius:4px;background:var(--line)}
+.meter i.on{background:var(--hero)}
+:root[data-theme="dark"] .meter i.on{background:var(--accent)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .meter i.on{background:var(--accent)}}
+.panel h3{margin:20px 0 10px;font:700 18px/1.2 var(--f-display);font-variation-settings:"wdth" 100,"wght" 700}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:grid;gap:12px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--hero);color:#fff;font:700 14px var(--f-body)}
+.steps li span{padding-top:3px}
+.perks,.avoid{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.perks li,.avoid li{display:grid;grid-template-columns:22px 1fr;gap:12px;align-items:start}
+.perks li::before,.avoid li::before{content:"";width:22px;height:22px;border-radius:50%;background-repeat:no-repeat;background-position:center;background-size:14px}
+.perks li::before{background-color:var(--mint);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F1A4A' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")}
+.avoid li::before{background-color:var(--pink);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F1A4A' stroke-width='3.2' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E")}
+.perks li span,.avoid li span{padding-top:1px}
+
+/* Buttons */
+.btn{appearance:none;border:0;border-radius:999px;padding:13px 22px;min-height:48px;font:700 16px var(--f-body);cursor:pointer}
+.btn-primary{background:var(--hero);color:#fff}
+.btn-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--line)}
+.btn-accent{background:var(--accent);color:var(--navy)}
+.btn-ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
+.save{width:100%;margin-top:22px}
+
+.empty{padding:30px 16px;text-align:center;color:var(--muted)}
+.empty p{margin:0 0 14px}
+
+/* Before you start */
+.before{margin:28px 16px 0;padding:20px 18px 18px;background:var(--surface);border:1px solid var(--line);border-radius:22px}
+.before h2{margin:0 0 12px;font:800 24px/1.1 var(--f-display);font-variation-settings:"wdth" 110,"wght" 800}
+.before p{margin:0 0 12px}
+.before .fine{margin:16px 0 0;color:var(--muted);font-size:14px}
+
+/* Views: plan and timer */
+.view-head{padding:22px 18px 6px}
+.view-head h2{margin:0;font:800 clamp(34px,10vw,46px)/1 var(--f-display);font-variation-settings:"wdth" 120,"wght" 800}
+.view-head p{margin:8px 0 0;color:var(--muted)}
+.progress{margin:14px 16px 0}
+.progress p{margin:0 0 8px;font-weight:600}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:var(--hero);transition:width .3s ease}
+.plan-list{list-style:none;margin:16px 0 0;padding:0 16px;display:grid;gap:10px}
+.plan-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:10px 6px 10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.check{appearance:none;display:grid;place-items:center;width:36px;height:36px;padding:0;border-radius:50%;border:2px solid var(--muted);background:transparent;cursor:pointer}
+.check svg{width:18px;height:18px;stroke:var(--navy);fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.check[aria-checked="true"]{background:var(--mint);border-color:var(--mint)}
+.check[aria-checked="true"] svg{opacity:1}
+.plan-main{min-width:0;display:grid}
+.plan-main strong{font-weight:700;overflow-wrap:anywhere}
+.plan-main span{color:var(--muted);font-size:14px}
+.plan-row.done .plan-main strong{text-decoration:line-through;color:var(--muted)}
+.link{appearance:none;border:0;background:transparent;color:var(--tab-on);font:700 14px var(--f-body);padding:10px 6px;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.icon-btn{appearance:none;display:grid;place-items:center;width:44px;height:44px;border:0;background:transparent;border-radius:50%;cursor:pointer}
+.icon-btn svg{width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:2.4;stroke-linecap:round}
+.plan-actions{margin:18px 16px 0;display:flex;flex-wrap:wrap;gap:10px}
+
+.timer-panel{margin:12px 10px 0;padding:24px 16px 20px;border-radius:28px;background:var(--hero);color:#fff;text-align:center}
+.ring-wrap{position:relative;width:min(72vw,260px);margin:0 auto}
+.ring{display:block;width:100%;height:auto}
+.ring circle{fill:none;stroke-width:14}
+.ring-track{stroke:rgba(255,255,255,.22)}
+.ring-bar{stroke:#fff;stroke-linecap:round;stroke-dasharray:603.19;stroke-dashoffset:0}
+.timer-panel[data-phase="work"] .ring-bar{stroke:var(--accent)}
+.timer-panel[data-phase="rest"] .ring-bar{stroke:var(--mint)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+#tPhase{font:700 18px var(--f-body)}
+#tTime{font:800 clamp(46px,14vw,66px)/1 var(--f-display);font-variation-settings:"wdth" 115,"wght" 800;font-variant-numeric:tabular-nums}
+#tRound{font-size:14px}
+.timer-actions{display:flex;justify-content:center;gap:10px;margin-top:20px}
+.timer-actions .btn{min-width:130px}
+.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 16px 0}
+.preset{appearance:none;display:grid;gap:2px;padding:10px 6px;border:0;border-radius:14px;background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line);font-family:inherit;cursor:pointer;min-height:56px}
+.preset b{font-size:14px}
+.preset small{font-size:12px;color:var(--muted)}
+.preset[aria-pressed="true"]{background:var(--ink);color:var(--bg);box-shadow:none}
+.preset[aria-pressed="true"] small{color:var(--bg)}
+.steppers{display:grid;gap:8px;margin:12px 16px 0}
+.stepper{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 8px 8px 16px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.stepper .lab{font-weight:600}
+.stepper .ctl{display:flex;align-items:center;gap:6px}
+.stepper .val{min-width:58px;text-align:center;font:700 18px var(--f-display);font-variation-settings:"wdth" 100,"wght" 700;font-variant-numeric:tabular-nums}
+.step-btn{appearance:none;width:44px;height:44px;border:0;border-radius:50%;background:var(--bg);color:var(--ink);font:700 22px/1 var(--f-body);cursor:pointer}
+.step-btn:disabled{opacity:.35;cursor:not-allowed}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 16px 0;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.switch{appearance:none;position:relative;width:52px;height:30px;border:0;border-radius:99px;background:var(--line);cursor:pointer;flex:none}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
+.switch[aria-checked="true"]{background:var(--hero)}
+.switch[aria-checked="true"]::after{transform:translateX(22px);background:#fff}
+
+
+/* Demonstração com boneco */
+.demo{position:relative;margin:0 0 6px;padding:8px 10px 10px;background:var(--bg);border-radius:16px}
+.fig{display:block;width:100%;height:auto;max-height:270px}
+.fig .fig-ground{stroke:var(--line);stroke-width:1.5}
+.fig .b{fill:none;stroke:var(--ink);stroke-width:6;stroke-linecap:round}
+.fig .b.far{stroke:var(--muted);opacity:.6}
+.fig .b.hl{stroke:var(--hero)}
+.fig .head{fill:var(--surface);stroke:var(--ink);stroke-width:3}
+.fig .prop{fill:var(--line);stroke:var(--muted);stroke-opacity:.5;stroke-width:1}
+.fig .prop-l{stroke:var(--line);stroke-width:3;stroke-linecap:round}
+.fig .wall,.fig .mat{fill:var(--line)}
+.fig .rope{fill:none;stroke:var(--pink);stroke-width:2;stroke-linecap:round}
+.fig .wt{fill:var(--ink)}
+:root[data-theme="dark"] .fig .b.hl{stroke:var(--accent)}
+:root[data-theme="dark"] .demo-legend i{background:var(--accent)}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .fig .b.hl{stroke:var(--accent)}
+  :root:not([data-theme="light"]) .demo-legend i{background:var(--accent)}
+}
+.demo-btn{appearance:none;position:absolute;top:6px;right:6px;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:var(--surface);cursor:pointer;box-shadow:inset 0 0 0 1.5px var(--line)}
+.demo-btn svg{width:20px;height:20px;stroke:var(--ink);fill:var(--ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.demo-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:6px 12px;margin-top:4px}
+.demo-cap{margin:0;display:grid;min-height:2.9em}
+.demo-cap-n{font-size:13px;color:var(--muted)}
+.demo-cap-t{font-weight:700;font-size:15px}
+.demo-legend{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.demo-legend i{width:14px;height:6px;border-radius:3px;background:var(--hero)}
+
+/* Tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+.tabbar-in{display:flex;gap:4px;max-width:640px;margin:0 auto}
+.tab{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px;padding:6px 4px;border:0;border-radius:14px;background:transparent;color:var(--muted);font:600 12px var(--f-body);cursor:pointer}
+.tab svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tab[aria-current="page"]{color:var(--tab-on);background:var(--tab-bg)}
+.badge{position:absolute;top:3px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--navy);font:700 11px/18px var(--f-body)}
+.badge[hidden]{display:none}
+
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:30;transform:translate(-50%,12px);max-width:calc(100% - 32px);padding:11px 18px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- EXPLORAR -->
+  <section id="view-explore" class="view">
+    <header class="hero">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 13h5l3-8 4 15 3-7h5"/></svg>
+        Mexe-te
+        <span class="by">por Francisco Capita</span>
+      </div>
+      <h1 id="hl"><span id="hlText">Treina.</span></h1>
+      <p class="blurb" id="blurb"></p>
+      <div class="chips" id="goalChips" role="group" aria-label="O que queres ganhar"></div>
+    </header>
+
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Tipo de conteúdo">
+        <button type="button" data-kind="ex" aria-pressed="true">Exercícios</button>
+        <button type="button" data-kind="tr" aria-pressed="false">Tipos de treino</button>
+      </div>
+      <div class="filters">
+        <label class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="Procurar por nome ou músculo" aria-label="Procurar por nome ou músculo" autocomplete="off">
+        </label>
+        <div class="pills" id="levelPills" role="group" aria-label="Nível"></div>
+      </div>
+      <p class="count" id="count" aria-live="polite"></p>
+    </div>
+
+    <div class="list" id="list"></div>
+
+    <section class="before" aria-labelledby="beforeH">
+      <h2 id="beforeH">Antes de começar</h2>
+      <p><strong>Quanto por semana.</strong> A Organização Mundial da Saúde recomenda aos adultos 150 a 300 minutos de atividade aeróbica moderada, mais exercícios de força em 2 ou mais dias.</p>
+      <p><strong>Aquece e arrefece.</strong> Dedica 5 a 10 minutos a aquecer antes de treinar e 5 minutos a acalmar o corpo no fim.</p>
+      <p><strong>Ouve o corpo.</strong> Cansaço muscular é normal. Dor aguda numa articulação não é: pára e descansa.</p>
+      <p><strong>Recupera.</strong> Dormir bem, beber água e comer o suficiente é o que faz o treino render.</p>
+      <p class="fine">Informação geral, não substitui aconselhamento médico. Se tens uma doença, uma lesão, estás grávida ou tens dúvidas, fala primeiro com um médico ou com um profissional de exercício.</p>
+      <p class="fine"><strong>Mexe-te</strong> foi criado por Francisco Capita.</p>
+    </section>
+  </section>
+
+  <!-- PLANO -->
+  <section id="view-plan" class="view" hidden>
+    <header class="view-head">
+      <h2>O meu plano</h2>
+      <p id="planDate"></p>
+    </header>
+    <div class="progress" id="planProgress" hidden>
+      <p id="planCount"></p>
+      <div class="bar" aria-hidden="true"><i id="planBar"></i></div>
+    </div>
+    <ul class="plan-list" id="planList"></ul>
+    <div class="plan-actions" id="planActions"></div>
+  </section>
+
+  <!-- CRONÓMETRO -->
+  <section id="view-timer" class="view" hidden>
+    <header class="view-head">
+      <h2>Cronómetro</h2>
+      <p>Intervalos de trabalho e descanso para HIIT e circuitos.</p>
+    </header>
+    <div class="timer-panel" id="timerPanel" data-phase="idle">
+      <div class="ring-wrap">
+        <svg class="ring" viewBox="0 0 220 220" aria-hidden="true">
+          <circle class="ring-track" cx="110" cy="110" r="96"/>
+          <circle class="ring-bar" id="ringBar" cx="110" cy="110" r="96" transform="rotate(-90 110 110)"/>
+        </svg>
+        <div class="ring-center">
+          <div id="tPhase">Pronto</div>
+          <div id="tTime">00:30</div>
+          <div id="tRound"></div>
+        </div>
+      </div>
+      <div class="timer-actions">
+        <button type="button" class="btn btn-accent" id="tStart">Começar</button>
+        <button type="button" class="btn btn-ghost" id="tReset">Recomeçar</button>
+      </div>
+    </div>
+    <div class="sr" id="tLive" aria-live="polite"></div>
+    <div class="presets" id="presets" role="group" aria-label="Predefinições"></div>
+    <div class="steppers" id="steppers"></div>
+    <div class="switch-row">
+      <span id="soundLab">Som e vibração</span>
+      <button type="button" class="switch" id="soundSw" role="switch" aria-checked="true" aria-labelledby="soundLab"></button>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<nav class="tabbar" aria-label="Secções">
+  <div class="tabbar-in">
+    <button type="button" class="tab" data-tab="explore" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
+      Explorar
+    </button>
+    <button type="button" class="tab" data-tab="plan">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>
+      Plano
+      <span class="badge" id="planBadge" hidden>0</span>
+    </button>
+    <button type="button" class="tab" data-tab="timer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>
+      Cronómetro
+    </button>
+  </div>
+</nav>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(s){return document.querySelector(s)};
+var $$ = function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+var store = {
+  get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+
+
+/* ---------- Bonecos animados ---------- */
+// Motor do boneco: esqueleto (perfil a olhar para a direita, ou vista frontal).
+// Ângulo de membros: 0 = a apontar para baixo, +90 = para a frente (direita), -90 = para trás (esquerda), 180 = para cima.
+// Ângulo do tronco: 0 = vertical para cima, +90 = deitado a apontar para a frente.
+var FIG = (function(){
+  var L = {torso:34, ua:19, la:18, th:26, sh:25, ft:9, hr:8, nk:13};
+  var GROUND = 138, SW = 6, CX = 110;
+  function down(a){var r=a*Math.PI/180;return [Math.sin(r),Math.cos(r)]}
+  function up(a){var r=a*Math.PI/180;return [Math.sin(r),-Math.cos(r)]}
+  function add(o,d,l){return [o[0]+d[0]*l,o[1]+d[1]*l]}
+  function P(p,R){
+    var H=[R[0],R[1]], half=L.torso/2, tm=(p.tm==null?p.t:p.tm);
+    var M=add(H,up(p.t),half), N=add(M,up(tm),half);
+    var hd=add(N,up(tm+(p.hd||0)),L.nk);
+    var sw=p.front?6:0, hw=p.front?4:0;
+    function arm(a,dx){var s=[N[0]+dx,N[1]];var e=add(s,down(a[0]),L.ua);return {s:s,e:e,h:add(e,down(a[1]),L.la)}}
+    function leg(a,dx){var s=[H[0]+dx,H[1]];var k=add(s,down(a[0]),L.th);var an=add(k,down(a[1]),L.sh);var to=add(an,down(a.length>2?a[2]:90),L.ft);return {s:s,k:k,a:an,t:to}}
+    return {H:H,M:M,N:N,hd:hd,front:!!p.front,aN:arm(p.aN,sw),aF:arm(p.aF,-sw),lN:leg(p.lN,hw),lF:leg(p.lF,-hw)};
+  }
+  function allPts(q){return [q.H,q.M,q.N,q.aN.e,q.aN.h,q.aF.e,q.aF.h,q.lN.k,q.lN.a,q.lN.t,q.lF.k,q.lF.a,q.lF.t,[q.hd[0],q.hd[1]+L.hr-SW/2]]}
+  function anchorPt(q,name){
+    return {hip:q.H,ankleN:q.lN.a,ankleF:q.lF.a,toeN:q.lN.t,toeF:q.lF.t,handN:q.aN.h,handF:q.aF.h,kneeN:q.lN.k,kneeF:q.lF.k,neck:q.N,head:q.hd}[name||'ankleN'];
+  }
+  function solve(fr){
+    var p0=P(fr,[0,0]);
+    var maxY=-1e9;allPts(p0).forEach(function(pt){if(pt[1]>maxY)maxY=pt[1]});
+    var ap=anchorPt(p0,fr.anchor);
+    var ax=(fr.ax==null?CX:fr.ax);
+    if(fr.ay!=null)return [ax-ap[0], fr.ay-ap[1]];
+    return [ax-ap[0], GROUND-SW/2-maxY-(fr.lift||0)+(fr.dy||0)];
+  }
+  function lerp(a,b,k){return a+(b-a)*k}
+  function pad(x){x=x.slice();if(x.length<3)x.push(90);return x}
+  function mix(a,b,k){
+    var o={t:lerp(a.t,b.t,k),tm:lerp(a.tm==null?a.t:a.tm,b.tm==null?b.t:b.tm,k),hd:lerp(a.hd||0,b.hd||0,k),front:a.front};
+    ['aN','aF','lN','lF'].forEach(function(n){
+      var x=pad(a[n]),y=pad(b[n]);
+      o[n]=x.map(function(v,i){return lerp(v,y[i],k)});
+    });
+    o.R=[lerp(a.R[0],b.R[0],k),lerp(a.R[1],b.R[1],k)];
+    o.rope=lerp(a.rope==null?0:a.rope,b.rope==null?0:b.rope,k);
+    return o;
+  }
+  function ik2(o,T,L1,L2,bend){
+    var dx=T[0]-o[0],dy=T[1]-o[1],d=Math.sqrt(dx*dx+dy*dy);
+    var dd=Math.max(Math.abs(L1-L2)+0.05,Math.min(L1+L2-0.05,d));
+    var th=Math.atan2(dx,dy)*180/Math.PI;
+    var ca=(L1*L1+dd*dd-L2*L2)/(2*L1*dd);
+    var al=Math.acos(Math.max(-1,Math.min(1,ca)))*180/Math.PI;
+    var a1=th+bend*al, e=add(o,down(a1),L1);
+    return [a1,Math.atan2(T[0]-e[0],T[1]-e[1])*180/Math.PI];
+  }
+  function aim(o,k,a,L1){
+    var a1=Math.atan2(k[0]-o[0],k[1]-o[1])*180/Math.PI, kn=add(o,down(a1),L1);
+    return [a1,Math.atan2(a[0]-kn[0],a[1]-kn[1])*180/Math.PI];
+  }
+  function target(q,t){if(typeof t==='string'){var p=t.split('.');return q[p[0]][p[1]]}return t}
+  function prep(frames,front){
+    frames.forEach(function(f){
+      if(front)f.front=true;
+      f.R=f.hip?f.hip.slice():solve(f);
+      (f.reach||[]).forEach(function(r){
+        var q=P(f,f.R), isArm=r.j.charAt(0)==='a', o=q[r.j].s;
+        var ang=ik2(o,target(q,r.to),isArm?L.ua:L.th,isArm?L.la:L.sh,r.bend||1);
+        f[r.j]=ang.concat(f[r.j].slice(2));
+      });
+      (f.pin||[]).forEach(function(r){
+        var q=P(f,f.R), o=q[r.j].s;
+        var ang=aim(o,r.k,r.a,L.th);
+        f[r.j]=ang.concat(f[r.j].slice(2));
+      });
+    });
+    return frames;
+  }
+  var f1=function(n){return Math.round(n*10)/10};
+  function ln(a,b,cls){return '<line class="'+cls+'" x1="'+f1(a[0])+'" y1="'+f1(a[1])+'" x2="'+f1(b[0])+'" y2="'+f1(b[1])+'"/>'}
+  function draw(q,opts){
+    opts=opts||{};var hl=opts.hl||[];var s='';
+    var far=q.front?'b':'b far';
+    function c(name,base){return base+(hl.indexOf(name)>-1?' hl':'')}
+    if(opts.rope!=null){
+      var h=q.aN.h, cy=lerp(-5,163,opts.rope);
+      s+='<path class="rope" d="M'+f1(h[0])+' '+f1(h[1])+' C'+f1(h[0]+56)+' '+f1(cy)+' '+f1(h[0]-56)+' '+f1(cy)+' '+f1(h[0])+' '+f1(h[1])+'"/>';
+    }
+    s+=ln(q.aF.s,q.aF.e,c('uarmF',far))+ln(q.aF.e,q.aF.h,c('larmF',far));
+    s+=ln(q.lF.s,q.lF.k,c('thighF',far))+ln(q.lF.k,q.lF.a,c('shinF',far))+ln(q.lF.a,q.lF.t,far);
+    s+=ln(q.H,q.M,c('torso','b'))+ln(q.M,q.N,c('torso','b'));
+    s+=ln(q.lN.s,q.lN.k,c('thighN','b'))+ln(q.lN.k,q.lN.a,c('shinN','b'))+ln(q.lN.a,q.lN.t,'b');
+    s+=ln(q.aN.s,q.aN.e,c('uarmN','b'))+ln(q.aN.e,q.aN.h,c('larmN','b'));
+    s+='<circle class="head" cx="'+f1(q.hd[0])+'" cy="'+f1(q.hd[1])+'" r="'+L.hr+'"/>';
+    (opts.hold||[]).forEach(function(k){
+      var hand=k==='F'?q.aF:q.aN, e=hand.e, w=hand.h;
+      var ang=Math.atan2(w[1]-e[1],w[0]-e[0])*180/Math.PI+90;
+      s+='<g transform="translate('+f1(w[0])+' '+f1(w[1])+') rotate('+f1(ang)+')"><rect class="wt" x="-9" y="-3.5" width="18" height="7" rx="2"/></g>';
+    });
+    return s;
+  }
+  function pose(fr){return P(fr,fr.R)}
+  // impede o boneco de afundar no chão durante as transições
+  function clampPose(o){
+    var q=P(o,o.R),mx=-1e9,lim=GROUND-SW/2;
+    allPts(q).forEach(function(p){if(p[1]>mx)mx=p[1]});
+    if(mx>lim+3.5){o.R=[o.R[0],o.R[1]-(mx-lim-3.5)];q=P(o,o.R)}
+    return q;
+  }
+  return {L:L,GROUND:GROUND,SW:SW,CX:CX,P:P,pose:pose,clampPose:clampPose,solve:solve,prep:prep,mix:mix,draw:draw,anchorPt:anchorPt,allPts:allPts,down:down,up:up};
+})();
+
+var ANIMS = (function(){
+  var D={t:0,hd:0,aN:[0,0],aF:[0,0],lN:[0,0,90],lF:[0,0,90]};
+  function S(o){var r={};for(var k in D)r[k]=D[k];for(var k in o)r[k]=o[k];return r}
+  var MAT='<rect class="mat" x="14" y="138" width="192" height="4" rx="2"/>';
+  var A={};
+
+  A['agachamento']={mode:'pp',move:1000,hold:350,hl:['thighN','thighF'],props:'',
+    f:[S({aN:[90,90],aF:[90,90],anchor:'ankleN',ax:105,c:'Sobe'}),
+       S({t:38,hd:-12,aN:[90,90],aF:[90,90],lN:[80,-20],lF:[80,-20],anchor:'ankleN',ax:105,c:'Desce'})]};
+
+  A['flexoes']={mode:'pp',move:900,hold:300,hl:['uarmN','larmN','uarmF','larmF','torso'],props:'',
+    f:[S({t:70,aN:[0,0],aF:[3,3],lN:[-70,-70,30],lF:[-71,-71,30],anchor:'handN',ax:160,c:'Sobe'}),
+       S({t:86,aN:[-80,55],aF:[-78,53],lN:[-86,-86,30],lF:[-86,-86,30],anchor:'handN',ax:160,c:'Desce'})]};
+
+  A['prancha']={mode:'pp',move:1500,hold:200,hl:['torso'],props:'',
+    f:[S({t:82.4,aN:[0,90],aF:[0,90],lN:[-82.4,-82.4,30],lF:[-83,-83,30],anchor:'handN',ax:160,c:'Mantém e respira'}),
+       S({t:83.6,aN:[0,90],aF:[0,90],lN:[-83.6,-83.6,30],lF:[-84,-84,30],anchor:'handN',ax:160,c:'Mantém e respira'})]};
+
+  A['afundos']={mode:'pp',move:1000,hold:300,hl:['thighN','thighF'],props:'',
+    f:[S({aN:[-35,60],aF:[-35,60],hip:[121,88],reach:[{j:'lN',to:[140,133],bend:1}],pin:[{j:'lF',k:[104,128],a:[96,131]}],lN:[0,0,90],lF:[-30,-30,45],c:'Sobe'}),
+       S({aN:[-35,60],aF:[-35,60],hip:[114,110],lN:[90,0,90],lF:[-30,-90,45],pin:[{j:'lF',k:[98,133],a:[74,129]}],c:'Desce'})]};
+
+  A['ponte']={mode:'pp',move:1000,hold:500,hl:['thighN','thighF'],props:MAT,
+    f:[S({t:90,aN:[-90,-90],aF:[-88,-88],lN:[-145,-31.5,-90],lF:[-145,-31.5,-90],anchor:'ankleN',ax:60,dy:3,c:'Desce'}),
+       S({t:110,aN:[-90,-90],aF:[-88,-88],lN:[-110,-35,-90],lF:[-110,-35,-90],anchor:'ankleN',ax:60,dy:3,c:'Sobe'})]};
+
+  A['burpees']={mode:'cy',move:420,hold:60,hl:[],props:'',
+    f:[S({anchor:'ankleN',ax:95,c:'Em pé'}),
+       S({t:50,hd:-10,lN:[70,-40],lF:[70,-40],anchor:'ankleN',ax:95,reach:[{j:'aN',to:[122,135],bend:-1},{j:'aF',to:[128,135],bend:-1}],c:'Agacha e apoia as mãos'}),
+       S({t:70,aN:[0,0],aF:[3,3],lN:[-70,-70,30],lF:[-71,-71,30],anchor:'handN',ax:140,c:'Recua os pés'}),
+       S({t:50,hd:-10,lN:[70,-40],lF:[70,-40],anchor:'ankleN',ax:95,reach:[{j:'aN',to:[122,135],bend:-1},{j:'aF',to:[128,135],bend:-1}],c:'Traz os pés'}),
+       S({aN:[158,158],aF:[154,154],lN:[0,-5,45],lF:[0,-5,45],lift:8,anchor:'ankleN',ax:95,c:'Salta'})]};
+
+  A['corda']={mode:'pp',move:280,hold:40,hl:[],rope:true,props:'',
+    f:[S({aN:[25,70],aF:[22,66],anchor:'ankleN',ax:100,rope:0,c:'Aterra'}),
+       S({aN:[25,70],aF:[22,66],lN:[5,-15,60],lF:[5,-15,60],lift:13,anchor:'ankleN',ax:100,rope:1,c:'Salta'})]};
+
+  A['gato-camelo']={mode:'pp',move:1400,hold:250,hl:['torso'],props:'',
+    f:[S({t:102,tm:35,hd:-25,aN:[0,0],aF:[-3,-3],lN:[0,-90,-90],lF:[0,-90,-90],anchor:'handN',ax:155,c:'Barriga desce, olha para cima'}),
+       S({t:38,tm:100,hd:25,aN:[0,0],aF:[-3,-3],lN:[0,-90,-90],lF:[0,-90,-90],anchor:'handN',ax:155,c:'Arredonda as costas'})]};
+
+  A['posteriores']={mode:'pp',move:1400,hold:800,hl:['thighN'],props:MAT,
+    f:[S({t:0,aN:[50,70],aF:[50,70],lN:[90,90,180],lF:[120,-50,90],anchor:'hip',ax:70,c:'Costas direitas'}),
+       S({t:62,hd:-15,lN:[90,90,180],lF:[120,-50,90],anchor:'hip',ax:70,reach:[{j:'aN',to:'lN.a',bend:1},{j:'aF',to:'lN.a',bend:1}],c:'Inclina a partir da anca'})]};
+
+  A['joelhos']={mode:'pp',move:300,hold:0,hl:['thighN','thighF'],props:'',
+    f:[S({t:4,aN:[-40,-10],aF:[55,140],lN:[90,0,90],lF:[0,0,90],anchor:'ankleF',ax:110,c:'Joelho ao peito'}),
+       S({t:4,aN:[55,140],aF:[-40,-10],lN:[0,0,90],lF:[90,0,90],anchor:'ankleN',ax:110,c:'Troca'})]};
+
+  A['polichinelos']={mode:'pp',move:300,hold:0,hl:[],front:true,props:'',
+    f:[S({aN:[3,3],aF:[-3,-3],lN:[2,2,90],lF:[-2,-2,-90],anchor:'hip',ax:110,c:'Fecha'}),
+       S({aN:[155,165],aF:[-155,-165],lN:[22,22,90],lF:[-22,-22,-90],lift:8,anchor:'hip',ax:110,c:'Abre e salta'})]};
+
+  A['escalador']={mode:'pp',move:320,hold:0,hl:['torso','thighN','thighF'],props:'',
+    f:[S({t:70,aN:[0,0],aF:[3,3],lN:[75,-60,90],lF:[-70,-70,30],anchor:'handN',ax:160,c:'Joelho ao peito'}),
+       S({t:70,aN:[0,0],aF:[3,3],lN:[-70,-70,30],lF:[75,-60,90],anchor:'handN',ax:160,c:'Troca'})]};
+
+  A['agachamento-salto']={mode:'pp',move:420,hold:80,hl:['thighN','thighF'],props:'',
+    f:[S({t:38,hd:-12,aN:[-60,-60],aF:[-60,-60],lN:[80,-20],lF:[80,-20],anchor:'ankleN',ax:105,c:'Agacha'}),
+       S({aN:[150,150],aF:[146,146],lN:[0,-3,45],lF:[0,-3,45],lift:9,anchor:'ankleN',ax:105,c:'Salta'})]};
+
+  A['degrau']={mode:'pp',move:900,hold:300,hl:['thighN','thighF'],props:'<rect class="prop" x="112" y="118" width="72" height="20" rx="3"/>',
+    f:[S({t:12,aN:[10,10],aF:[-10,-10],hip:[118,88],lN:[70,0,90],lF:[-8,-8,60],reach:[{j:'lN',to:[140,115],bend:1},{j:'lF',to:[100,133],bend:1}],c:'Desce'}),
+       S({aN:[10,10],aF:[-10,-10],hip:[139,64],lN:[3,3,90],lF:[85,10,90],reach:[{j:'lN',to:[140,115],bend:1}],c:'Sobe'})]};
+
+  A['gemeos']={mode:'pp',move:800,hold:350,hl:['shinN','shinF'],props:'<rect class="wall" x="146" y="10" width="6" height="128"/>',
+    f:[S({aN:[90,90],aF:[90,90],lN:[0,0,90],lF:[0,0,90],anchor:'toeN',ax:118,c:'Desce devagar'}),
+       S({aN:[90,90],aF:[90,90],lN:[0,0,20],lF:[0,0,20],anchor:'toeN',ax:118,c:'Sobe para as pontas dos pés'})]};
+
+  A['prancha-lateral']={mode:'pp',move:1500,hold:200,hl:['torso'],front:true,props:'',
+    f:[S({t:70,aN:[0,0],aF:[178,178],lN:[-70,-70,90],lF:[-71,-71,90],anchor:'handN',ax:150,c:'Anca alta, corpo em linha'}),
+       S({t:71.2,aN:[0,0],aF:[178,178],lN:[-71.2,-71.2,90],lF:[-72,-72,90],anchor:'handN',ax:150,c:'Anca alta, corpo em linha'})]};
+
+  A['cao-passaro']={mode:'pp',move:1200,hold:600,hl:['torso'],props:'',
+    f:[S({t:71,tm:71,hd:-10,aN:[0,0],aF:[0,0],lN:[0,-90,-90],lF:[0,-90,-90],anchor:'handN',ax:155,c:'Volta ao centro'}),
+       S({t:71,tm:71,hd:-10,aN:[0,0],aF:[90,90],lN:[-90,-90,-90],lF:[0,-90,-90],anchor:'handN',ax:155,c:'Estica braço e perna opostos'})]};
+
+  A['dead-bug']={mode:'cy',move:900,hold:150,hl:['torso'],props:MAT,
+    f:[S({t:90,aN:[180,180],aF:[176,176],lN:[-184,-90,180],lF:[-184,-90,180],anchor:'hip',ax:120,dy:3,c:'Volta'}),
+       S({t:90,aN:[100,100],aF:[176,176],lN:[-184,-90,180],lF:[-100,-100,180],anchor:'hip',ax:120,dy:3,c:'Estica um lado'}),
+       S({t:90,aN:[180,180],aF:[176,176],lN:[-184,-90,180],lF:[-184,-90,180],anchor:'hip',ax:120,dy:3,c:'Volta'}),
+       S({t:90,aN:[176,176],aF:[100,100],lN:[-100,-100,180],lF:[-184,-90,180],anchor:'hip',ax:120,dy:3,c:'Estica o outro lado'})]};
+
+  A['superman']={mode:'pp',move:900,hold:700,hl:['torso','thighN','thighF'],props:MAT,
+    f:[S({t:90,aN:[90,90],aF:[90,90],lN:[-90,-90,-90],lF:[-90,-90,-90],anchor:'hip',ax:110,dy:3,c:'Desce'}),
+       S({t:92,tm:72,hd:-10,aN:[108,108],aF:[105,105],lN:[-106,-106,-90],lF:[-104,-104,-90],anchor:'hip',ax:110,dy:3,c:'Levanta braços e pernas'})]};
+
+  A['remada']={mode:'pp',move:800,hold:300,hl:['uarmN','larmN','torso'],hold_w:['N'],props:'<rect class="prop" x="92" y="116" width="76" height="8" rx="2"/><line class="prop-l" x1="98" y1="124" x2="98" y2="138"/><line class="prop-l" x1="162" y1="124" x2="162" y2="138"/>',
+    f:[S({t:71,hd:-20,aN:[3,3],aF:[0,0],lN:[-25,-12,90],lF:[0,-90,-90],anchor:'ankleN',ax:110,c:'Desce'}),
+       S({t:71,hd:-20,aN:[-100,-5],aF:[0,0],lN:[-25,-12,90],lF:[0,-90,-90],anchor:'ankleN',ax:110,c:'Puxa o cotovelo para trás'})]};
+
+  A['press-ombros']={mode:'pp',move:900,hold:250,hl:['uarmN','larmN','uarmF','larmF'],hold_w:['N','F'],props:'',
+    f:[S({aN:[28,172],aF:[22,176],anchor:'ankleN',ax:110,c:'Desce'}),
+       S({aN:[172,172],aF:[168,168],anchor:'ankleN',ax:110,c:'Empurra para cima'})]};
+
+  A['rosca']={mode:'pp',move:900,hold:250,hl:['uarmN','uarmF'],hold_w:['N','F'],props:'',
+    f:[S({aN:[12,12],aF:[6,6],anchor:'ankleN',ax:110,c:'Desce devagar'}),
+       S({aN:[12,155],aF:[6,150],anchor:'ankleN',ax:110,c:'Dobra o cotovelo'})]};
+
+  A['triceps-cadeira']={mode:'pp',move:900,hold:300,hl:['uarmN','uarmF'],props:'<rect class="prop" x="60" y="101" width="40" height="7"/><line class="prop-l" x1="64" y1="108" x2="64" y2="138"/><line class="prop-l" x1="96" y1="108" x2="96" y2="138"/>',
+    f:[S({t:0,lN:[75,10,90],lF:[77,12,90],anchor:'ankleN',ax:132,reach:[{j:'aN',to:[94,101],bend:-1},{j:'aF',to:[90,101],bend:-1}],c:'Sobe'}),
+       S({t:-8,lN:[100,10,90],lF:[102,12,90],anchor:'ankleN',ax:132,reach:[{j:'aN',to:[94,101],bend:-1},{j:'aF',to:[90,101],bend:-1}],c:'Desce'})]};
+
+  A['terra-romeno']={mode:'pp',move:1000,hold:300,hl:['thighN','thighF','torso'],hold_w:['N','F'],props:'',
+    f:[S({aN:[5,5],aF:[3,3],anchor:'ankleN',ax:105,c:'Sobe'}),
+       S({t:74,hd:-30,aN:[-12,-12],aF:[-14,-14],lN:[25,-10],lF:[25,-10],anchor:'ankleN',ax:105,c:'Empurra a anca para trás'})]};
+
+  A['crianca']={mode:'pp',move:1500,hold:900,hl:['torso'],props:MAT,
+    f:[S({t:0,aN:[0,0],aF:[0,0],lN:[82,-90,-90],lF:[82,-90,-90],anchor:'ankleN',ax:80,c:'Senta nos calcanhares'}),
+       S({t:88,hd:20,aN:[80,80],aF:[80,80],lN:[82,-90,-90],lF:[82,-90,-90],anchor:'ankleN',ax:80,c:'Inclina e estica os braços'})]};
+
+  A['rotacao']={mode:'pp',move:1300,hold:400,hl:['thighN','thighF'],noground:true,props:'',
+    f:[S({t:90,aN:[180,180],aF:[0,0],lN:[180,-100,90],lF:[180,-100,90],anchor:'hip',ax:120,ay:75,c:'Joelhos para um lado'}),
+       S({t:90,aN:[180,180],aF:[0,0],lN:[0,-80,90],lF:[0,-80,90],anchor:'hip',ax:120,ay:75,c:'Joelhos para o outro lado'})]};
+
+  A['peito-porta']={mode:'pp',move:1400,hold:900,hl:['uarmN','larmN'],props:'<rect class="wall" x="86" y="10" width="6" height="128"/>',
+    f:[S({aN:[-125,-125],aF:[10,10],lN:[0,0],lF:[-6,-6],anchor:'handN',ax:92,c:'Braço na parede'}),
+       S({t:-5,aN:[-105,-105],aF:[10,10],lN:[20,10],lF:[-15,-20,60],anchor:'handN',ax:92,c:'Dá um passo e abre o peito'})]};
+
+  A['quadriceps']={mode:'pp',move:1200,hold:900,hl:['thighN'],props:'<rect class="wall" x="150" y="10" width="6" height="128"/>',
+    f:[S({aN:[5,5],aF:[90,90],lN:[0,0],lF:[0,0],anchor:'ankleF',ax:112,c:'Apoia-te na parede'}),
+       S({t:-3,aF:[90,90],lN:[-10,-165,-130],lF:[0,0],anchor:'ankleF',ax:112,reach:[{j:'aN',to:'lN.a',bend:1}],c:'Puxa o calcanhar ao glúteo'})]};
+
+  A['flexor-anca']={mode:'pp',move:1200,hold:900,hl:['thighN','thighF'],props:MAT,
+    f:[S({aN:[-30,40],aF:[-30,40],hip:[108,110],lN:[90,0,90],lF:[-18,-90,-90],reach:[{j:'lN',to:[135,134],bend:1}],pin:[{j:'lF',k:[100,134],a:[75,134]}],c:'Ajoelha com o tronco direito'}),
+       S({aN:[-30,40],aF:[-30,40],hip:[118,112],lN:[90,0,90],lF:[-18,-90,-90],reach:[{j:'lN',to:[135,134],bend:1}],pin:[{j:'lF',k:[100,134],a:[75,134]}],c:'Empurra a anca para a frente'})]};
+
+  // ciclos usados nos tipos de treino
+  A['andar']={mode:'cy',move:340,hold:0,hl:[],props:'',
+    f:[S({t:3,aN:[-25,-15],aF:[25,35],lN:[25,12,90],lF:[-20,-30,120],anchor:'hip',ax:110,c:'Passo'}),
+       S({t:3,aN:[0,10],aF:[0,10],lN:[0,0,90],lF:[10,-30,90],anchor:'hip',ax:110,c:'Passo'}),
+       S({t:3,aN:[25,35],aF:[-25,-15],lN:[-20,-30,120],lF:[25,12,90],anchor:'hip',ax:110,c:'Passo'}),
+       S({t:3,aN:[0,10],aF:[0,10],lN:[10,-30,90],lF:[0,0,90],anchor:'hip',ax:110,c:'Passo'})]};
+
+  A['correr']={mode:'cy',move:230,hold:0,hl:[],props:'',
+    f:[S({t:12,aN:[-55,-20],aF:[50,150],lN:[-35,-75,45],lF:[65,-15,90],anchor:'hip',ax:110,lift:0,c:'Corre'}),
+       S({t:12,aN:[0,90],aF:[0,90],lN:[-50,-100,45],lF:[40,10,80],anchor:'hip',ax:110,lift:8,c:'Corre'}),
+       S({t:12,aN:[50,150],aF:[-55,-20],lN:[65,-15,90],lF:[-35,-75,45],anchor:'hip',ax:110,lift:0,c:'Corre'}),
+       S({t:12,aN:[0,90],aF:[0,90],lN:[40,10,80],lF:[-50,-100,45],anchor:'hip',ax:110,lift:8,c:'Corre'})]};
+
+  return A;
+})();
+
+var LVL = {1:'Iniciante',2:'Intermédio',3:'Avançado'};
+
+var GOALS = {
+  todos:{label:'Tudo',title:'Treina.',blurb:'Escolhe o que queres ganhar e vê como treinar, passo a passo.',wdth:100,wght:800},
+  forca:{label:'Força',title:'Força.',blurb:'Músculos e ossos mais fortes, e tarefas do dia a dia mais leves.',wdth:150,wght:900},
+  resistencia:{label:'Resistência',title:'Resistência.',blurb:'Mais fôlego para subir escadas, correr ou brincar sem ficar sem ar.',wdth:62,wght:600},
+  gordura:{label:'Perder gordura',title:'Queimar.',blurb:'Movimentos que gastam mais energia. A alimentação também conta muito.',wdth:120,wght:700},
+  mobilidade:{label:'Mobilidade',title:'Mobilidade.',blurb:'Corpo mais solto, com menos rigidez e mais amplitude de movimento.',wdth:78,wght:200},
+  iniciar:{label:'Começar do zero',title:'Começar.',blurb:'Movimentos simples, sem material, para criar o hábito.',wdth:112,wght:500}
+};
+
+var DATA = [
+{id:'agachamento',kind:'ex',name:'Agachamento',zone:'Pernas, glúteos e core',lvl:1,effort:2,goals:['forca','iniciar'],dose:'3 séries de 10 a 15 repetições',gear:'Nenhum',
+ steps:['Põe-te de pé com os pés à largura dos ombros e as pontas dos pés ligeiramente viradas para fora.','Estica os braços à frente para manteres o equilíbrio e aperta o abdómen.','Empurra a anca para trás e dobra os joelhos, como se fosses sentar-te numa cadeira.','Desce até as coxas ficarem paralelas ao chão, ou até onde conseguires com as costas direitas.','Empurra o chão com os calcanhares e sobe, sem bloquear os joelhos no topo.'],
+ perks:['Fortalece coxas, glúteos e core no mesmo movimento.','Treina o gesto de sentar e levantar, que usas todos os dias.','Ajuda a manter fortes os ossos das pernas e da anca.','Usa grandes músculos, por isso gasta mais energia do que exercícios pequenos.'],
+ avoid:['Joelhos a cair para dentro: empurra-os na direção dos dedos dos pés.','Calcanhares a levantar: mantém o peso nos calcanhares e no meio do pé.','Costas arredondadas: mantém o peito aberto e o olhar em frente.']},
+
+{id:'flexoes',kind:'ex',name:'Flexões',zone:'Peito, ombros, tríceps e core',lvl:2,effort:3,goals:['forca'],dose:'3 séries de 6 a 12 repetições',gear:'Nenhum',
+ steps:['Apoia as mãos no chão, um pouco mais afastadas do que os ombros. Se estás a começar, apoia também os joelhos.','Estica o corpo numa linha reta, da cabeça aos joelhos ou aos calcanhares.','Aperta o abdómen e os glúteos para a anca não ceder.','Dobra os cotovelos, a cerca de 45° do tronco, e desce o peito até quase tocar no chão.','Empurra o chão para subir e estica os braços sem perder a linha do corpo.'],
+ perks:['Fortalece peito, ombros e tríceps.','O core trabalha o tempo todo para manter o corpo firme.','Não precisas de material e podes fazer em qualquer lado.','É fácil de ajustar: joelhos no chão, mãos numa mesa (mais fácil) ou pés elevados (mais difícil).'],
+ avoid:['Anca a descer ou a subir: pensa numa prancha em movimento.','Cotovelos muito abertos, a 90° do tronco: sobrecarregam os ombros.','Descer só um pouco: uma amplitude maior dá melhores resultados.']},
+
+{id:'prancha',kind:'ex',name:'Prancha',zone:'Abdómen, lombar e ombros',lvl:1,effort:2,goals:['forca','iniciar'],dose:'3 séries de 20 a 45 segundos',gear:'Nenhum',
+ steps:['Deita-te de barriga para baixo e apoia os antebraços no chão, com os cotovelos debaixo dos ombros.','Levanta o corpo apoiado nos antebraços e nas pontas dos pés.','Alinha a cabeça, as costas e as pernas. Aperta o abdómen e os glúteos.','Olha para o chão, respira com calma e mantém o tempo definido.'],
+ perks:['Fortalece o abdómen e a zona lombar, que estabilizam a coluna.','Ajuda a melhorar a postura.','Quase não tem impacto nas articulações.','Não precisa de material nem de muito espaço.'],
+ avoid:['Anca a descer: a lombar sofre. Pára a série quando já não conseguires manter a linha.','Anca muito alta: perde-se o trabalho do abdómen.','Prender a respiração: respira de forma lenta e regular.']},
+
+{id:'afundos',kind:'ex',name:'Afundos',zone:'Coxas, glúteos e equilíbrio',lvl:2,effort:3,goals:['forca'],dose:'3 séries de 8 a 10 por perna',gear:'Nenhum',
+ steps:['De pé, com os pés à largura da anca e as mãos na cintura.','Dá um passo grande à frente e apoia o pé inteiro no chão.','Dobra os dois joelhos até formarem cerca de 90°, com o joelho de trás perto do chão.','Mantém o tronco direito e o joelho da frente alinhado com o pé.','Empurra com o calcanhar da frente para voltar ao início e repete do outro lado.'],
+ perks:['Trabalha uma perna de cada vez e ajuda a corrigir diferenças de força entre elas.','Melhora o equilíbrio e a coordenação.','Fortalece coxas e glúteos, muito úteis para subir escadas.','Podes fazer no lugar ou a andar, conforme o espaço que tens.'],
+ avoid:['Passo demasiado curto: o peso vai todo para o joelho da frente. Dá um passo mais largo.','Tronco inclinado para a frente: mantém-no direito.','Joelho da frente a cair para dentro: alinha-o com o pé.']},
+
+{id:'ponte',kind:'ex',name:'Ponte de glúteos',zone:'Glúteos e parte de trás das coxas',lvl:1,effort:2,goals:['forca','mobilidade','iniciar'],dose:'3 séries de 12 a 15 repetições',gear:'Tapete (opcional)',
+ steps:['Deita-te de costas com os joelhos dobrados e os pés no chão, à largura da anca.','Deixa os braços ao longo do corpo, com as palmas no chão.','Aperta os glúteos e levanta a anca até o corpo formar uma linha dos ombros aos joelhos.','Faz uma pausa de 1 a 2 segundos em cima.','Desce devagar, sem deixar a anca cair de uma vez.'],
+ perks:['Ativa os glúteos, que ficam muitas vezes “adormecidos” em quem passa horas sentado.','Fortalece de forma suave a parte de trás das coxas e a zona lombar.','É seguro para começar: o corpo fica apoiado no chão.','Prepara o corpo para agachamentos e corrida.'],
+ avoid:['Arquear muito a lombar em cima: sobe só até à linha reta.','Empurrar com os dedos dos pés: pressiona os calcanhares.','Subir depressa demais, sem controlo.']},
+
+{id:'burpees',kind:'ex',name:'Burpees',zone:'Corpo todo',lvl:3,effort:5,goals:['gordura','resistencia'],dose:'4 séries de 8, ou 30 segundos de esforço',gear:'Nenhum',
+ steps:['De pé, com os pés à largura dos ombros.','Agacha e apoia as mãos no chão à frente dos pés.','Recua os pés, um de cada vez ou de salto, até à posição de prancha.','Se quiseres mais desafio, faz uma flexão.','Traz os pés de volta junto às mãos.','Levanta-te e salta com os braços acima da cabeça. Se estás a começar, faz sem salto.'],
+ perks:['Trabalha pernas, peito, ombros e core na mesma repetição.','Faz subir muito a frequência cardíaca em pouco tempo.','Junta força e cardio sem precisares de material.','Cabe bem num treino curto de intervalos.'],
+ avoid:['Lombar a ceder na prancha: aperta o abdómen ou recua um pé de cada vez.','Ir depressa demais e perder a técnica: é melhor menos repetições bem feitas.','Aterrar com as pernas esticadas: aterra com os joelhos ligeiramente dobrados.']},
+
+{id:'corda',kind:'ex',name:'Saltos à corda',zone:'Pernas, gémeos e cardio',lvl:2,effort:4,goals:['resistencia','gordura'],dose:'10 rondas de 30 segundos, com 30 de pausa',gear:'Corda',
+ steps:['Escolhe uma corda que, pisada ao meio, chegue às axilas.','Segura os cabos à altura da anca, com os cotovelos perto do corpo.','Roda a corda com os pulsos, sem mexer muito os braços.','Salta pouco, só o suficiente para a corda passar, e aterra na ponta dos pés.','Mantém os joelhos ligeiramente dobrados e o olhar em frente.','Começa com 30 segundos e descansa 30 segundos entre rondas.'],
+ perks:['Melhora a coordenação e o ritmo.','É um cardio intenso em pouco tempo.','Fortalece os gémeos e os pés.','Ocupa pouco espaço e a corda cabe na mala.'],
+ avoid:['Saltar alto demais: cansa mais e aumenta o impacto.','Rodar a corda com os ombros: usa os pulsos.','Aterrar com os calcanhares: usa a ponta dos pés.']},
+
+{id:'gato-camelo',kind:'ex',name:'Gato-camelo',zone:'Coluna e ombros',lvl:1,effort:1,goals:['mobilidade','iniciar'],dose:'2 séries de 8 a 10 repetições',gear:'Tapete (opcional)',
+ steps:['Fica de quatro apoios: mãos debaixo dos ombros e joelhos debaixo da anca.','Inspira e deixa a barriga descer, enquanto levantas o peito e o olhar.','Expira, arredonda as costas e leva o queixo ao peito.','Alterna devagar, ao ritmo da respiração.'],
+ perks:['Mobiliza a coluna, vértebra a vértebra.','É um bom aquecimento antes de treinar.','Alivia a rigidez de quem passa muito tempo sentado.','Liga o movimento à respiração e ajuda a relaxar.'],
+ avoid:['Ir depressa demais: o movimento deve ser lento e fluido.','Forçar até doer: pára onde sentires uma tensão suave.','Dobrar os cotovelos: mantém os braços firmes.']},
+
+{id:'posteriores',kind:'ex',name:'Alongamento da parte de trás da coxa',zone:'Parte de trás das coxas',lvl:1,effort:1,goals:['mobilidade'],dose:'2 vezes de 30 segundos por perna',gear:'Nenhum',
+ steps:['Senta-te no chão com uma perna esticada e a outra dobrada, com a planta do pé junto à coxa.','Mantém as costas direitas.','Inclina o tronco para a frente, a partir da anca, em direção ao pé esticado.','Pára quando sentires uma tensão suave atrás da coxa e respira fundo durante 30 segundos.','Muda de perna.'],
+ perks:['Aumenta a amplitude de movimento das pernas e da anca.','Reduz a sensação de perna presa depois de correr ou de estar sentado.','Ajuda a agachar com melhor postura.','Relaxa o corpo no fim do treino.'],
+ avoid:['Fazer ressaltos: mantém a posição parada.','Arredondar muito as costas: o movimento vem da anca.','Sentir dor: deve ser só uma tensão suave.']},
+
+{id:'joelhos',kind:'ex',name:'Elevação de joelhos',zone:'Pernas e cardio',lvl:1,effort:3,goals:['resistencia','gordura','iniciar'],dose:'4 rondas de 30 segundos',gear:'Nenhum',
+ steps:['De pé, com a postura direita e os pés à largura da anca.','Levanta um joelho até à altura da anca. Se preferires, começa em marcha, sem salto.','Alterna as pernas e mexe os braços como quando corres.','Aterra suavemente nas pontas dos pés.','Faz 30 segundos e descansa 30.'],
+ perks:['Serve de aquecimento e faz subir a frequência cardíaca.','É cardio sem material e com pouco espaço.','Melhora a coordenação entre braços e pernas.','Podes ajustar o ritmo: marcha lenta ou corrida no lugar.'],
+ avoid:['Inclinar o tronco para trás: mantém-no direito.','Bater com força no chão: aterra de forma suave.','Prender a respiração.']},
+
+{id:'polichinelos',kind:'ex',name:'Polichinelos',zone:'Corpo todo e cardio',lvl:1,effort:3,goals:['resistencia','gordura','iniciar'],dose:'4 rondas de 30 segundos',gear:'Nenhum',
+ steps:['De pé, com os pés juntos e os braços ao longo do corpo.','Salta abrindo as pernas à largura dos ombros e levanta os braços acima da cabeça.','Salta de novo para voltar à posição inicial.','Mantém um ritmo constante e aterra de forma suave, com os joelhos ligeiramente dobrados.','Se precisares de menos impacto, dá passos para o lado em vez de saltar.'],
+ perks:['Aquece o corpo todo e faz subir a frequência cardíaca.','É simples de aprender e não precisa de material.','Trabalha ombros, pernas e coordenação.','Tem uma versão sem salto para quem quer menos impacto.'],
+ avoid:['Aterrar com as pernas esticadas: dobra ligeiramente os joelhos.','Ir depressa demais e perder o ritmo.','Encolher os ombros: mantém-nos afastados das orelhas.']},
+
+{id:'escalador',kind:'ex',name:'Escalador (mountain climbers)',zone:'Core, ombros e pernas',lvl:2,effort:4,goals:['gordura','resistencia'],dose:'4 rondas de 20 a 30 segundos',gear:'Nenhum',
+ steps:['Coloca-te na posição de prancha alta, com as mãos debaixo dos ombros.','Aperta o abdómen e mantém o corpo numa linha reta.','Leva um joelho ao peito e volta a esticar a perna.','Alterna as pernas num ritmo controlado, sem balançar a anca.','Começa devagar e acelera só quando a técnica estiver firme.'],
+ perks:['Trabalha abdómen, ombros e pernas ao mesmo tempo.','Faz subir a frequência cardíaca sem saltos.','Melhora a coordenação e a estabilidade do tronco.','Ocupa pouco espaço e não precisa de material.'],
+ avoid:['Anca muito alta ou a balançar: mantém a linha da prancha.','Mãos à frente dos ombros: coloca-as mesmo debaixo dos ombros.','Ir depressa demais e perder a técnica.']},
+
+{id:'agachamento-salto',kind:'ex',name:'Agachamento com salto',zone:'Pernas e glúteos',lvl:3,effort:4,goals:['gordura','resistencia','forca'],dose:'3 séries de 8 a 10 repetições',gear:'Nenhum',
+ steps:['Faz um agachamento normal, com os pés à largura dos ombros.','Empurra o chão com força e salta para cima, esticando o corpo.','Aterra suavemente na ponta dos pés e passa logo para os calcanhares.','Dobra os joelhos ao aterrar para amortecer o impacto.','Recompõe-te e faz a repetição seguinte.'],
+ perks:['Treina a força explosiva das pernas.','Gasta muita energia em pouco tempo.','Melhora a capacidade de saltar e de acelerar.','Fortalece os ossos com impacto controlado.'],
+ avoid:['Aterrar com as pernas esticadas: dobra sempre os joelhos.','Joelhos a cair para dentro na aterragem.','Fazer sem base: se os agachamentos simples ainda custam, começa por eles.']},
+
+{id:'degrau',kind:'ex',name:'Subida ao degrau',zone:'Coxas, glúteos e equilíbrio',lvl:1,effort:2,goals:['forca','iniciar','resistencia'],dose:'3 séries de 10 por perna',gear:'Degrau, escada ou banco estável',
+ steps:['Coloca-te à frente de um degrau firme, à altura do joelho ou mais baixo.','Apoia o pé inteiro no degrau.','Empurra com o calcanhar desse pé e sobe até ficares de pé em cima.','Desce devagar, com controlo, e repete. Faz todas as repetições e depois muda de perna.'],
+ perks:['Trabalha coxas e glúteos, uma perna de cada vez.','Treina o gesto de subir escadas.','Melhora o equilíbrio.','Tem pouco impacto nas articulações.'],
+ avoid:['Empurrar com a perna de baixo: o trabalho deve vir da perna que está em cima.','Escolher um degrau instável ou demasiado alto.','Joelho a cair para dentro.']},
+
+{id:'gemeos',kind:'ex',name:'Elevação de gémeos',zone:'Gémeos e tornozelos',lvl:1,effort:1,goals:['forca','iniciar'],dose:'3 séries de 12 a 20 repetições',gear:'Nenhum (uma parede para apoio, se quiseres)',
+ steps:['De pé, com os pés à largura da anca e uma mão numa parede, se precisares.','Sobe lentamente para as pontas dos pés.','Faz uma pausa de 1 segundo no topo.','Desce devagar até ao chão, contando 2 a 3 segundos.'],
+ perks:['Fortalece os gémeos e os tornozelos.','Ajuda a caminhar e a correr com mais estabilidade.','Dá mais firmeza ao tornozelo.','Podes fazer em qualquer lugar, até na cozinha.'],
+ avoid:['Balançar o corpo: sobe a direito, sem embalo.','Descer depressa demais: o controlo na descida é metade do exercício.','Deixar os tornozelos cair para os lados.']},
+
+{id:'prancha-lateral',kind:'ex',name:'Prancha lateral',zone:'Laterais do tronco e ombros',lvl:2,effort:3,goals:['forca'],dose:'3 séries de 15 a 30 segundos por lado',gear:'Tapete (opcional)',
+ steps:['Deita-te de lado, com o cotovelo debaixo do ombro e as pernas esticadas.','Levanta a anca do chão até o corpo formar uma linha reta, da cabeça aos pés.','Aperta o abdómen e mantém o pescoço alinhado com a coluna.','Respira com calma durante o tempo definido e muda de lado.','Para ser mais fácil, dobra os joelhos e apoia-os no chão.'],
+ perks:['Fortalece os músculos laterais do tronco.','Ajuda a estabilizar a coluna.','Trabalha o ombro de apoio.','É uma boa alternativa para variar da prancha normal.'],
+ avoid:['Anca a descer: mantém a linha reta.','Tronco a rodar para a frente ou para trás.','Ombro encolhido: afasta-o da orelha.']},
+
+{id:'cao-passaro',kind:'ex',name:'Cão-pássaro (bird dog)',zone:'Core, costas e glúteos',lvl:1,effort:1,goals:['forca','mobilidade','iniciar'],dose:'2 a 3 séries de 8 repetições por lado',gear:'Tapete (opcional)',
+ steps:['Fica de quatro apoios: mãos debaixo dos ombros e joelhos debaixo da anca.','Aperta o abdómen e mantém as costas planas.','Estica um braço à frente e a perna oposta para trás, ao mesmo tempo.','Faz uma pausa de 1 a 2 segundos, sem rodar a anca.','Volta ao início devagar e muda de lado.'],
+ perks:['Treina a estabilidade da coluna e do core.','Coordena braços, pernas e respiração.','É suave para as costas.','Ajuda a corrigir diferenças entre os dois lados do corpo.'],
+ avoid:['Levantar a perna demasiado alto e arquear a lombar.','Rodar a anca: mantém-na paralela ao chão.','Mexer-te depressa demais.']},
+
+{id:'dead-bug',kind:'ex',name:'Inseto morto (dead bug)',zone:'Abdómen profundo',lvl:1,effort:2,goals:['forca','iniciar'],dose:'3 séries de 8 repetições por lado',gear:'Tapete (opcional)',
+ steps:['Deita-te de costas, com os braços esticados para o teto e as pernas dobradas a 90°, com os joelhos por cima da anca.','Encosta a zona lombar ao chão, apertando o abdómen.','Estica devagar um braço por cima da cabeça e a perna oposta, sem a lombar sair do chão.','Volta ao centro e alterna o lado.','Expira ao esticar e inspira ao voltar.'],
+ perks:['Ensina o abdómen a estabilizar a coluna.','As costas ficam apoiadas no chão, o que o torna seguro para a lombar.','Bom para iniciantes e para aquecer antes de treinar.','Melhora a coordenação entre braços e pernas.'],
+ avoid:['Lombar a levantar do chão: estica menos a perna.','Ir depressa: quanto mais devagar, melhor.','Prender a respiração.']},
+
+{id:'superman',kind:'ex',name:'Superman',zone:'Costas, lombar e glúteos',lvl:1,effort:2,goals:['forca'],dose:'3 séries de 10 repetições',gear:'Tapete (opcional)',
+ steps:['Deita-te de barriga para baixo, com os braços esticados à frente e as pernas esticadas.','Olha para o chão para manteres o pescoço alinhado.','Levanta ao mesmo tempo os braços e as pernas alguns centímetros do chão.','Faz uma pausa de 1 a 2 segundos, apertando costas e glúteos.','Desce devagar.'],
+ perks:['Fortalece a lombar e os músculos ao longo da coluna.','Trabalha glúteos e a parte de trás dos ombros.','Compensa muitas horas sentado.','Não precisa de material.'],
+ avoid:['Levantar demasiado e forçar a lombar: sobe só alguns centímetros.','Olhar para cima e sobrecarregar o pescoço.','Continuar com dor nas costas: pára e fala com um profissional.']},
+
+{id:'remada',kind:'ex',name:'Remada com haltere',zone:'Costas e bíceps',lvl:2,effort:3,goals:['forca'],dose:'3 séries de 8 a 12 por lado',gear:'Haltere, garrafa de água cheia ou mochila',
+ steps:['Apoia uma mão e o joelho do mesmo lado num banco ou sofá. Com a outra mão, segura o peso.','Mantém as costas retas e o olhar no chão, um pouco à frente.','Puxa o peso em direção à anca, levando o cotovelo para trás e para cima.','Aperta as omoplatas no topo.','Desce devagar até esticar o braço e repete. Depois muda de lado.'],
+ perks:['Fortalece as costas, que ajudam a manter a postura.','Equilibra o trabalho de empurrar (flexões) com o de puxar.','Trabalha os bíceps e a parte de trás dos ombros.','Podes usar objetos que já tens em casa.'],
+ avoid:['Rodar o tronco para levantar o peso: mantém-no parado.','Puxar só com o braço: pensa em levar o cotovelo para trás.','Costas arredondadas.']},
+
+{id:'press-ombros',kind:'ex',name:'Press de ombros com pesos',zone:'Ombros e tríceps',lvl:2,effort:3,goals:['forca'],dose:'3 séries de 8 a 12 repetições',gear:'Halteres ou garrafas de água cheias',
+ steps:['De pé ou sentado, com os pés firmes. Segura um peso em cada mão, à altura dos ombros.','Aperta o abdómen e mantém as costas retas.','Empurra os pesos para cima até esticares quase completamente os braços.','Desce devagar até à altura das orelhas e repete.'],
+ perks:['Fortalece ombros e tríceps.','Ajuda em tarefas como arrumar coisas em prateleiras altas.','Treina a estabilidade do tronco.','É fácil de ajustar mudando o peso.'],
+ avoid:['Arquear a lombar para levantar: aperta o abdómen.','Usar um peso demasiado pesado.','Encolher os ombros: mantém-nos longe das orelhas.']},
+
+{id:'rosca',kind:'ex',name:'Rosca de bíceps',zone:'Braços (bíceps)',lvl:1,effort:2,goals:['forca'],dose:'3 séries de 10 a 15 repetições',gear:'Halteres, garrafas de água ou elástico',
+ steps:['De pé, com um peso em cada mão e os braços ao longo do corpo, com as palmas viradas para a frente.','Mantém os cotovelos junto ao tronco.','Dobra os cotovelos e leva os pesos em direção aos ombros.','Desce devagar, contando 2 a 3 segundos, até esticares os braços.'],
+ perks:['Fortalece os bíceps e os antebraços.','Ajuda a carregar sacos, malas e caixas.','É fácil de fazer em casa.','Simples de aprender e adequado a quem está a começar.'],
+ avoid:['Balançar o corpo para levantar: usa menos peso.','Afastar os cotovelos do corpo.','Descer depressa e sem controlo.']},
+
+{id:'triceps-cadeira',kind:'ex',name:'Tríceps na cadeira',zone:'Parte de trás dos braços e ombros',lvl:2,effort:3,goals:['forca'],dose:'3 séries de 8 a 12 repetições',gear:'Cadeira ou banco estável',
+ steps:['Senta-te na ponta de uma cadeira firme e agarra a beira com as mãos, ao lado da anca.','Desliza a anca para a frente, com as pernas dobradas (mais fácil) ou esticadas (mais difícil).','Dobra os cotovelos para trás, até cerca de 90°.','Empurra para cima até esticares os braços.','Mantém as costas perto da cadeira.'],
+ perks:['Fortalece os tríceps.','Não precisa de material além de uma cadeira.','É fácil de ajustar com a posição das pernas.','Complementa as flexões.'],
+ avoid:['Descer demasiado: pára aos 90° para proteger os ombros.','Cotovelos abertos para os lados.','Cadeira instável: encosta-a à parede para não deslizar.']},
+
+{id:'terra-romeno',kind:'ex',name:'Levantamento terra romeno',zone:'Parte de trás das coxas, glúteos e lombar',lvl:2,effort:3,goals:['forca'],dose:'3 séries de 8 a 12 repetições',gear:'Halteres, mochila ou garrafas de água cheias',
+ steps:['De pé, com os pés à largura da anca e um peso em cada mão à frente das coxas.','Dobra ligeiramente os joelhos e mantém-nos assim durante todo o movimento.','Empurra a anca para trás e desce o tronco, deslizando os pesos junto às pernas.','Mantém as costas retas e desce até sentires a parte de trás das coxas a esticar.','Aperta os glúteos e empurra a anca para a frente para voltar ao início.'],
+ perks:['Fortalece a parte de trás das coxas, os glúteos e a lombar.','Ensina a dobrar a anca sem arredondar as costas, um gesto útil para levantar objetos.','Ajuda a melhorar a postura.','É fácil de começar com pesos leves.'],
+ avoid:['Costas arredondadas: desce só até onde as conseguires manter retas.','Agachar em vez de dobrar a anca.','Pesos afastados das pernas: deixa-os deslizar junto ao corpo.']},
+
+{id:'crianca',kind:'ex',name:'Postura da criança',zone:'Costas, ancas e ombros',lvl:1,effort:1,goals:['mobilidade','iniciar'],dose:'2 a 3 vezes de 30 a 60 segundos',gear:'Tapete (opcional)',
+ steps:['Ajoelha-te no tapete, com os joelhos afastados à largura da anca e os dedos dos pés juntos.','Senta a anca para trás, em direção aos calcanhares.','Inclina o tronco e estica os braços à frente, com a testa apoiada no chão.','Respira fundo e devagar durante 30 a 60 segundos.'],
+ perks:['Alonga suavemente costas, ancas e ombros.','Ajuda a relaxar depois do treino.','É muito acessível a quem está a começar.','Serve de pausa entre exercícios mais duros.'],
+ avoid:['Forçar se o joelho doer: coloca uma almofada entre a anca e os calcanhares.','Prender a respiração.','Erguer os ombros para as orelhas.']},
+
+{id:'rotacao',kind:'ex',name:'Rotação de tronco deitado',zone:'Coluna e ancas',lvl:1,effort:1,goals:['mobilidade'],dose:'8 repetições por lado',gear:'Tapete (opcional)',
+ steps:['Deita-te de costas, com os braços abertos em cruz e os joelhos dobrados.','Mantém os ombros no chão.','Deixa os joelhos caírem devagar para um lado, até onde for confortável.','Volta ao centro e repete do outro lado.','Acompanha o movimento com a respiração.'],
+ perks:['Solta a coluna e as ancas.','Alivia a rigidez depois de estar muito tempo sentado.','É bom para fazer antes de dormir.','É muito suave para quem começa.'],
+ avoid:['Levantar os ombros do chão.','Forçar a rotação até doer.','Fazer movimentos bruscos.']},
+
+{id:'peito-porta',kind:'ex',name:'Alongamento do peito na porta',zone:'Peito e ombros',lvl:1,effort:1,goals:['mobilidade'],dose:'2 vezes de 30 segundos por lado',gear:'Uma porta ou esquina de parede',
+ steps:['Fica junto a uma ombreira ou esquina, com o antebraço encostado à parede e o cotovelo dobrado a 90°, à altura do ombro.','Dá um pequeno passo à frente com a perna do mesmo lado, até sentires o peito a esticar.','Mantém o corpo direito e respira fundo durante 30 segundos.','Repete do outro lado.'],
+ perks:['Abre o peito e os ombros.','Ajuda quem passa muito tempo ao computador.','Contribui para uma melhor postura.','Pode ser feito em qualquer lugar.'],
+ avoid:['Forçar até doer no ombro.','Arquear a lombar: mantém o abdómen ativo.','Encolher os ombros.']},
+
+{id:'quadriceps',kind:'ex',name:'Alongamento da frente da coxa',zone:'Frente das coxas',lvl:1,effort:1,goals:['mobilidade'],dose:'2 vezes de 30 segundos por perna',gear:'Uma parede para apoio (opcional)',
+ steps:['De pé, com uma mão numa parede para manteres o equilíbrio.','Dobra um joelho e agarra o pé com a mão do mesmo lado.','Leva o calcanhar em direção ao glúteo, mantendo os joelhos juntos.','Empurra a anca ligeiramente para a frente e mantém 30 segundos.','Muda de perna.'],
+ perks:['Alonga a frente das coxas, muito usada ao correr e pedalar.','Ajuda a reduzir a rigidez do joelho e da anca.','É bom depois de agachamentos e afundos.','Trabalha o equilíbrio.'],
+ avoid:['Arquear a lombar: aperta o abdómen.','Puxar o pé com força até o joelho doer.','Afastar o joelho da perna de apoio.']},
+
+{id:'flexor-anca',kind:'ex',name:'Alongamento da frente da anca',zone:'Anca e frente da coxa',lvl:1,effort:1,goals:['mobilidade'],dose:'2 vezes de 30 segundos por lado',gear:'Tapete ou almofada',
+ steps:['Ajoelha-te com um joelho no chão (usa uma almofada) e o outro pé à frente, com o joelho a 90°.','Mantém o tronco direito e aperta o abdómen.','Empurra a anca suavemente para a frente até sentires a frente da anca de trás a esticar.','Mantém 30 segundos, a respirar fundo, e muda de lado.'],
+ perks:['Alonga os músculos da anca que encurtam quando estás muito tempo sentado.','Pode aliviar a tensão na zona lombar.','É bom depois de correr.','Melhora a amplitude dos afundos e dos agachamentos.'],
+ avoid:['Arquear a lombar: aperta o abdómen e mantém a bacia direita.','Deixar o joelho da frente cair para dentro.','Forçar com dor.']},
+
+{id:'t-forca',kind:'tr',name:'Treino de força',zone:'Corpo todo',lvl:1,effort:3,goals:['forca'],dose:'2 a 3 vezes por semana, 30 a 60 minutos',gear:'Peso do corpo, elásticos ou pesos',
+ steps:['Aquece 5 a 10 minutos com movimentos leves e rotações das articulações.','Escolhe 5 ou 6 exercícios que cubram o corpo todo: pernas, empurrar, puxar e core.','Faz 2 a 4 séries de 6 a 15 repetições, com uma carga que deixe 1 a 3 repetições de reserva.','Descansa 1 a 2 minutos entre séries.','Deixa cerca de 48 horas antes de treinar os mesmos músculos com esforço alto.','Aumenta o desafio aos poucos: mais repetições, mais carga ou movimento mais lento.'],
+ perks:['Aumenta a força e a massa muscular.','Ajuda a manter os ossos fortes.','Reduz o risco de quedas e de lesões no dia a dia.','Melhora a forma como o corpo usa a glicose, o que ajuda a saúde metabólica.','Muitas pessoas notam melhor humor e mais confiança.'],
+ avoid:['Carga demasiado pesada com má técnica: primeiro o movimento, depois o peso.','Treinar sempre os mesmos músculos: alterna os grupos.','Saltar o aquecimento.']},
+
+{id:'t-cardio',kind:'tr',name:'Cardio contínuo',zone:'Coração, pulmões e pernas',lvl:1,effort:3,goals:['resistencia','gordura'],dose:'3 a 5 vezes por semana, 20 a 45 minutos',gear:'Sapatilhas ou bicicleta',
+ steps:['Aquece 5 minutos a ritmo leve.','Escolhe uma atividade de que gostes: correr, pedalar, nadar ou remar.','Mantém um ritmo em que consegues falar frases curtas, mas não cantar.','Começa com 20 a 30 minutos.','Aumenta o tempo cerca de 10% por semana, não mais.','Arrefece 5 minutos e alonga.'],
+ perks:['Fortalece o coração e melhora a capacidade dos pulmões.','Ajuda a controlar a tensão arterial e o colesterol.','Dá mais energia durante o dia e melhora o sono.','Ajuda a reduzir o stress.','Aumenta o gasto de energia e ajuda a controlar o peso.'],
+ avoid:['Começar depressa demais: se não consegues falar, abranda.','Subir o volume de repente: é assim que aparecem as lesões.','Ignorar dores que não passam.']},
+
+{id:'t-hiit',kind:'tr',name:'Treino intervalado (HIIT)',zone:'Corpo todo',lvl:2,effort:5,goals:['gordura','resistencia'],dose:'1 a 2 vezes por semana, 15 a 25 minutos',gear:'Nenhum',
+ steps:['Aquece 5 a 10 minutos, aumentando o ritmo aos poucos.','Escolhe 4 a 6 exercícios simples, como saltos à corda, agachamentos e elevação de joelhos.','Trabalha 20 a 40 segundos com esforço muito alto.','Descansa 20 a 40 segundos antes do exercício seguinte.','Repete 6 a 10 rondas. Usa o cronómetro desta app.','Arrefece 5 minutos e deixa um dia de descanso antes do próximo treino intenso.'],
+ perks:['Treinos curtos e eficazes para quem tem pouco tempo.','Melhora a condição cardiovascular.','Grande gasto de energia numa sessão curta.','Não precisa de material.'],
+ avoid:['Fazer todos os dias: o corpo precisa de recuperar.','Começar sem base: se estás a iniciar, passa primeiro por caminhadas e cardio leve.','Perder a técnica com o cansaço: abranda em vez de arriscar.']},
+
+{id:'t-circuito',kind:'tr',name:'Circuito com o peso do corpo',zone:'Corpo todo',lvl:1,effort:3,goals:['forca','gordura','iniciar'],dose:'3 vezes por semana, 20 a 30 minutos',gear:'Nenhum',
+ steps:['Aquece 5 minutos.','Escolhe 5 exercícios: agachamento, flexões, afundos, prancha e ponte de glúteos.','Faz 30 a 40 segundos de cada, com 15 a 20 segundos de pausa entre eles.','Passar por todos os exercícios é uma ronda. Faz 3 rondas.','Descansa 1 a 2 minutos entre rondas.','Quando ficar fácil, aumenta o tempo de trabalho ou acrescenta uma ronda.'],
+ perks:['Não precisas de ginásio nem de material.','Junta força e um pouco de cardio na mesma sessão.','Treina o corpo todo em menos de 30 minutos.','É fácil de adaptar ao teu nível.'],
+ avoid:['Ir depressa demais e perder a técnica.','Ignorar os dias de descanso.','Repetir sempre o mesmo circuito sem progredir.']},
+
+{id:'t-caminhada',kind:'tr',name:'Caminhada rápida',zone:'Pernas, coração e articulações',lvl:1,effort:2,goals:['iniciar','resistencia','gordura'],dose:'30 a 45 minutos, na maioria dos dias',gear:'Sapatilhas confortáveis',
+ steps:['Calça sapatilhas confortáveis e veste roupa adequada ao clima.','Começa com 15 a 20 minutos.','Mantém a postura direita, o olhar em frente e os braços a balançar.','Anda a um passo em que respiras mais fundo, mas ainda consegues falar.','Vai aumentando a duração até 30 a 45 minutos.','Sempre que puderes, escolhe subidas ou acelera durante períodos curtos.'],
+ perks:['Tem baixo impacto nas articulações e é fácil de começar.','Melhora a saúde do coração e a circulação.','Ajuda o humor e reduz o stress.','Pode ser feita a qualquer hora e não custa nada.'],
+ avoid:['Passos demasiado curtos e lentos: procura um ritmo que te faça respirar mais fundo.','Andar sempre a olhar para o telemóvel: perde-se a postura.','Sapatilhas gastas ou desconfortáveis.']},
+
+{id:'t-mobilidade',kind:'tr',name:'Rotina de mobilidade',zone:'Corpo todo',lvl:1,effort:1,goals:['mobilidade','iniciar'],dose:'5 a 10 minutos por dia',gear:'Tapete (opcional)',
+ steps:['Escolhe 5 a 8 movimentos que cubram pescoço, ombros, coluna, anca e pernas.','Move-te devagar e respira com calma.','Antes de treinar, faz movimentos dinâmicos, como círculos com os braços e o gato-camelo.','Depois de treinar, faz alongamentos parados de 20 a 40 segundos por lado.','Pára sempre que sentires dor: deve ser só uma tensão suave.','Repete todos os dias, mesmo que sejam poucos minutos.'],
+ perks:['Aumenta a amplitude de movimento.','Reduz a rigidez e ajuda a recuperar depois do treino.','Melhora a postura de quem passa muito tempo sentado.','Ajuda a relaxar no fim do dia.'],
+ avoid:['Alongar músculos frios com muita força.','Fazer ressaltos.','Prender a respiração.']}
+];
+
+var state = {
+  tab:'explore', kind:'ex', goal:'todos', level:0, q:'', open:null,
+  plan: store.get('mexe:plan',[]).filter(function(id){return DATA.some(function(d){return d.id===id})}),
+  done: store.get('mexe:done',{date:'',ids:[]})
+};
+
+function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+if(!state.done || state.done.date!==todayKey()){state.done={date:todayKey(),ids:[]}}
+function byId(id){return DATA.filter(function(d){return d.id===id})[0]}
+/* ---------- Leitor das demonstrações ---------- */
+var COMBO={
+  't-forca':['agachamento','flexoes','remada','terra-romeno'],
+  't-cardio':['correr'],
+  't-hiit':['polichinelos','corda','escalador','burpees'],
+  't-circuito':['agachamento','flexoes','afundos','prancha','ponte'],
+  't-caminhada':['andar'],
+  't-mobilidade':['gato-camelo','crianca','flexor-anca','rotacao']
+};
+var ANIM_NAMES={andar:'Caminhada rápida',correr:'Corrida'};
+var ICON_PAUSE='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none"/></svg>';
+var ICON_PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>';
+function ease(k){return .5-.5*Math.cos(Math.PI*k)}
+function timeline(a){
+  var n=a.f.length,order=[],i,j;
+  for(i=0;i<n;i++)order.push(i);
+  if(a.mode!=='cy'){for(j=n-2;j>=1;j--)order.push(j)}
+  var segs=[],t=0;
+  for(i=0;i<order.length;i++){
+    var from=order[i],to=order[(i+1)%order.length];
+    segs.push({a:from,b:to,t:t,d:a.move});t+=a.move;
+    if(a.hold){segs.push({a:to,b:to,t:t,d:a.hold});t+=a.hold}
+  }
+  return {segs:segs,T:t};
+}
+var Demo={
+  raf:0,svg:null,list:[],li:0,a:null,tl:null,loops:1,t0:0,el:0,play:false,
+  attach:function(itemId,root){
+    this.stop();
+    var svg=root.querySelector('.fig');if(!svg)return;
+    this.svg=svg;this.body=svg.querySelector('.fig-body');this.props=svg.querySelector('.fig-props');this.ground=svg.querySelector('.fig-ground');
+    this.cap=root.querySelector('.demo-cap-t');this.nm=root.querySelector('.demo-cap-n');this.btn=root.querySelector('.demo-btn');this.legend=root.querySelector('.demo-legend');
+    this.list=COMBO[itemId]||[itemId];this.li=0;
+    this.load();
+    this.play=!REDUCE;this.el=0;this.t0=performance.now();
+    this.btnState();this.paint(0);
+    if(this.play)this.loop();
+  },
+  load:function(){
+    var id=this.list[this.li],a=ANIMS[id];
+    if(!a._p){FIG.prep(a.f,a.front);a._p=1}
+    this.a=a;this.tl=timeline(a);
+    this.loops=this.list.length>1?Math.max(1,Math.round(3800/this.tl.T)):1e9;
+    this.props.innerHTML=a.props||'';
+    this.ground.style.display=a.noground?'none':'';
+    var it=byId(id);
+    this.nm.textContent=this.list.length>1?(it?it.name:(ANIM_NAMES[id]||'')):'';
+    this.legend.style.display=(a.hl&&a.hl.length)?'':'none';
+  },
+  paint:function(el){
+    var a=this.a,tl=this.tl,t=el%tl.T,s=tl.segs[0],i;
+    for(i=0;i<tl.segs.length;i++){if(t>=tl.segs[i].t)s=tl.segs[i];else break}
+    var fa=a.f[s.a],fb=a.f[s.b],o,rope;
+    if(s.a===s.b){o=fa;rope=fa.rope}
+    else{o=FIG.mix(fa,fb,ease(Math.min(1,(t-s.t)/s.d)));rope=o.rope}
+    var q=a.noground?FIG.P(o,o.R):FIG.clampPose(o.R===fa.R?{t:o.t,tm:o.tm,hd:o.hd,front:o.front,aN:o.aN,aF:o.aF,lN:o.lN,lF:o.lF,R:o.R.slice()}:o);
+    this.body.innerHTML=FIG.draw(q,{hl:a.hl,hold:a.hold_w,rope:a.rope?(rope||0):null});
+    this.cap.textContent=a.f[s.b].c||'';
+  },
+  loop:function(){
+    var self=this;cancelAnimationFrame(this.raf);
+    var step=function(now){
+      if(!self.play||!self.svg||!self.svg.isConnected)return;
+      var el=now-self.t0;
+      if(self.list.length>1&&el>=self.loops*self.tl.T){self.li=(self.li+1)%self.list.length;self.load();self.t0=now;el=0}
+      self.el=el;self.paint(el);self.raf=requestAnimationFrame(step);
+    };
+    this.raf=requestAnimationFrame(step);
+  },
+  toggle:function(){
+    if(!this.svg)return;
+    if(this.play){this.play=false;cancelAnimationFrame(this.raf)}
+    else{this.play=true;this.t0=performance.now()-this.el;this.loop()}
+    this.btnState();
+  },
+  btnState:function(){
+    if(!this.btn)return;
+    this.btn.setAttribute('aria-label',this.play?'Pausar demonstração':'Reproduzir demonstração');
+    this.btn.innerHTML=this.play?ICON_PAUSE:ICON_PLAY;
+  },
+  stop:function(){cancelAnimationFrame(this.raf);this.play=false;this.svg=null}
+};
+function demoHTML(it){
+  return '<figure class="demo">'+
+    '<svg class="fig" viewBox="34 -14 174 160" role="img" aria-label="Demonstração com um boneco: '+it.name+'"><g class="fig-props"></g><line class="fig-ground" x1="36" y1="138" x2="206" y2="138"/><g class="fig-body"></g></svg>'+
+    '<button type="button" class="demo-btn" data-demo="1" aria-label="Pausar demonstração"></button>'+
+    '<div class="demo-foot"><figcaption class="demo-cap" aria-hidden="true"><span class="demo-cap-n"></span><span class="demo-cap-t"></span></figcaption>'+
+    '<span class="demo-legend"><i></i>Zona que trabalha</span></div></figure>';
+}
+function attachOpen(){
+  if(!state.open)return;
+  var el=document.getElementById('it-'+state.open);
+  if(el)Demo.attach(state.open,el);
+}
+
+function savePlan(){store.set('mexe:plan',state.plan)}
+function saveDone(){store.set('mexe:done',state.done)}
+
+/* ---------- Toast ---------- */
+var toastT;
+function toast(msg){
+  var t=$('#toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},2200);
+}
+
+/* ---------- Headline (weight and width follow the goal) ---------- */
+var hlCur={wdth:50,wght:100}, hlRaf=0;
+function fitHeadline(){
+  var h=$('#hl'), s=$('#hlText');
+  if(!h.clientWidth) return;
+  s.style.fontSize='100px';
+  var w=s.offsetWidth; if(!w) return;
+  var size=Math.min(120,Math.max(34,Math.floor(100*h.clientWidth/w)-1));
+  s.style.fontSize=size+'px';
+}
+function applyHL(w,g){$('#hlText').style.fontVariationSettings='"wdth" '+w.toFixed(1)+', "wght" '+g.toFixed(1);fitHeadline()}
+function setHeadline(key,instant){
+  var g=GOALS[key];
+  $('#hlText').textContent=g.title;
+  $('#blurb').textContent=g.blurb;
+  cancelAnimationFrame(hlRaf);
+  if(REDUCE||instant){hlCur={wdth:g.wdth,wght:g.wght};applyHL(g.wdth,g.wght);return}
+  var from={wdth:hlCur.wdth,wght:hlCur.wght}, t0=performance.now(), dur=460;
+  (function step(now){
+    var p=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-p,3);
+    hlCur={wdth:from.wdth+(g.wdth-from.wdth)*e,wght:from.wght+(g.wght-from.wght)*e};
+    applyHL(hlCur.wdth,hlCur.wght);
+    if(p<1) hlRaf=requestAnimationFrame(step);
+  })(t0);
+}
+
+/* ---------- Controls ---------- */
+function buildChips(){
+  $('#goalChips').innerHTML=Object.keys(GOALS).map(function(k){
+    return '<button type="button" class="chip" data-goal="'+k+'" aria-pressed="'+(k===state.goal)+'">'+GOALS[k].label+'</button>';
+  }).join('');
+  var lv=[[0,'Qualquer nível'],[1,'Iniciante'],[2,'Intermédio'],[3,'Avançado']];
+  $('#levelPills').innerHTML=lv.map(function(l){
+    return '<button type="button" class="pill" data-level="'+l[0]+'" aria-pressed="'+(l[0]===state.level)+'">'+l[1]+'</button>';
+  }).join('');
+}
+function syncControls(){
+  $$('#goalChips .chip').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.goal===state.goal)});
+  $$('#levelPills .pill').forEach(function(b){b.setAttribute('aria-pressed',Number(b.dataset.level)===state.level)});
+  $$('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.kind===state.kind)});
+  $('#q').value=state.q;
+}
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+
+/* ---------- List ---------- */
+var CHEV='<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+function meter(n){var s='';for(var i=1;i<=5;i++)s+='<i class="'+(i<=n?'on':'')+'"></i>';return '<span class="meter" role="img" aria-label="Esforço '+n+' de 5">'+s+'</span>'}
+function li(arr){return arr.map(function(t){return '<li><span>'+t+'</span></li>'}).join('')}
+
+function itemHTML(it){
+  var saved=state.plan.indexOf(it.id)>-1, open=state.open===it.id;
+  return '<article class="item lvl'+it.lvl+(open?' open':'')+(saved?' saved':'')+'" id="it-'+it.id+'" data-id="'+it.id+'">'+
+    '<button type="button" class="item-head" aria-expanded="'+open+'" aria-controls="pn-'+it.id+'">'+
+      '<span class="item-main"><span class="item-name">'+it.name+'<span class="saved-dot"><span class="sr"> (no plano)</span></span></span>'+
+      '<span class="item-zone">'+it.zone+'</span></span>'+
+      '<span class="lvl-tag">'+LVL[it.lvl]+'</span>'+CHEV+
+    '</button>'+
+    '<div class="panel" id="pn-'+it.id+'"'+(open?'':' inert')+'><div class="panel-inner"><div class="panel-body">'+
+      demoHTML(it)+
+      '<dl class="facts">'+
+        '<div class="wide"><dt>Quanto fazer</dt><dd>'+it.dose+'</dd></div>'+
+        '<div><dt>Material</dt><dd>'+it.gear+'</dd></div>'+
+        '<div><dt>Esforço</dt><dd>'+meter(it.effort)+'</dd></div>'+
+      '</dl>'+
+      '<h3>Como fazer</h3><ol class="steps">'+li(it.steps)+'</ol>'+
+      '<h3>Vantagens</h3><ul class="perks">'+li(it.perks)+'</ul>'+
+      '<h3>Evita</h3><ul class="avoid">'+li(it.avoid)+'</ul>'+
+      '<button type="button" class="btn save '+(saved?'btn-line':'btn-primary')+'" data-save="'+it.id+'" aria-pressed="'+saved+'">'+(saved?'Retirar do plano':'Guardar no plano')+'</button>'+
+    '</div></div></div></article>';
+}
+
+function filtered(){
+  var q=norm(state.q.trim());
+  return DATA.filter(function(d){
+    if(d.kind!==state.kind) return false;
+    if(state.goal!=='todos' && d.goals.indexOf(state.goal)<0) return false;
+    if(state.level && d.lvl!==state.level) return false;
+    if(q && norm(d.name+' '+d.zone).indexOf(q)<0) return false;
+    return true;
+  }).sort(function(a,b){return a.lvl-b.lvl});
+}
+function renderList(){
+  var list=filtered(), n=list.length;
+  var noun = state.kind==='ex' ? (n===1?'exercício':'exercícios') : (n===1?'tipo de treino':'tipos de treino');
+  var txt = n+' '+noun;
+  if(state.goal!=='todos') txt+=' para '+GOALS[state.goal].label.toLowerCase();
+  $('#count').textContent=txt;
+  if(state.open && !list.some(function(d){return d.id===state.open})) state.open=null;
+  Demo.stop();
+  $('#list').innerHTML = n ? list.map(itemHTML).join('') :
+    '<div class="empty"><p>Nada encontrado com estes filtros.</p><button type="button" class="btn btn-line" data-clear="1">Limpar filtros</button></div>';
+  attachOpen();
+}
+
+function applyOpen(el,open){
+  el.classList.toggle('open',open);
+  el.querySelector('.item-head').setAttribute('aria-expanded',String(open));
+  el.querySelector('.panel').inert=!open;
+}
+function setOpen(id,open){
+  if(state.open && state.open!==id){var p=document.getElementById('it-'+state.open);if(p)applyOpen(p,false)}
+  var el=document.getElementById('it-'+id);
+  if(el) applyOpen(el,open);
+  state.open=open?id:null;
+  if(open&&el)Demo.attach(id,el);else Demo.stop();
+  if(open && el){
+    setTimeout(function(){
+      var r=el.getBoundingClientRect();
+      if(r.top<8||r.top>window.innerHeight*.5) el.scrollIntoView({block:'start',behavior:REDUCE?'auto':'smooth'});
+    },340);
+  }
+}
+
+function toggleSave(id){
+  var i=state.plan.indexOf(id), it=byId(id);
+  if(i>-1){state.plan.splice(i,1);state.done.ids=state.done.ids.filter(function(x){return x!==id});saveDone();toast('Retirado do plano')}
+  else{state.plan.push(id);toast('Guardado no plano')}
+  savePlan();
+  var el=document.getElementById('it-'+id);
+  if(el){
+    var saved=state.plan.indexOf(id)>-1;
+    el.classList.toggle('saved',saved);
+    var b=el.querySelector('.save');
+    b.setAttribute('aria-pressed',String(saved));
+    b.textContent=saved?'Retirar do plano':'Guardar no plano';
+    b.className='btn save '+(saved?'btn-line':'btn-primary');
+  }
+  updateBadge();
+  if(state.tab==='plan') renderPlan();
+}
+function updateBadge(){
+  var n=state.plan.length, b=$('#planBadge');
+  b.textContent=n;b.hidden=!n;
+}
+
+/* ---------- Plan ---------- */
+var CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+var XICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+function renderPlan(){
+  var d=new Date().toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'});
+  $('#planDate').textContent=d.charAt(0).toUpperCase()+d.slice(1);
+  var ids=state.plan, n=ids.length;
+  var done=ids.filter(function(id){return state.done.ids.indexOf(id)>-1}).length;
+  $('#planProgress').hidden=!n;
+  if(n){
+    $('#planCount').textContent = done===n ? 'Plano de hoje completo. Bom trabalho!' : done+' de '+n+' feitos hoje';
+    $('#planBar').style.width=(done/n*100)+'%';
+  }
+  if(!n){
+    $('#planList').innerHTML='<li class="empty"><p>Ainda não tens nada no plano. Abre um exercício em Explorar e toca em Guardar no plano.</p></li>';
+    $('#planActions').innerHTML='<button type="button" class="btn btn-primary" data-go="explore">Ir para Explorar</button>';
+    return;
+  }
+  $('#planList').innerHTML=ids.map(function(id){
+    var it=byId(id), isDone=state.done.ids.indexOf(id)>-1;
+    return '<li class="plan-row'+(isDone?' done':'')+'">'+
+      '<button type="button" class="check" role="checkbox" aria-checked="'+isDone+'" data-done="'+id+'" aria-label="Marcar '+it.name+' como feito">'+CHECK+'</button>'+
+      '<div class="plan-main"><strong>'+it.name+'</strong><span>'+it.dose+'</span></div>'+
+      '<button type="button" class="link" data-view="'+id+'">Ver passos</button>'+
+      '<button type="button" class="icon-btn" data-remove="'+id+'" aria-label="Retirar '+it.name+' do plano">'+XICON+'</button>'+
+    '</li>';
+  }).join('');
+  $('#planActions').innerHTML='<button type="button" class="btn btn-primary" data-go="timer">Abrir cronómetro</button><button type="button" class="btn btn-line" data-go="explore">Acrescentar mais</button>';
+}
+
+/* ---------- Tabs ---------- */
+function switchTab(name){
+  state.tab=name;
+  Demo.stop();
+  ['explore','plan','timer'].forEach(function(t){$('#view-'+t).hidden=(t!==name)});
+  $$('.tab').forEach(function(b){
+    if(b.dataset.tab===name) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  if(name==='plan') renderPlan();
+  if(name==='timer') renderTimer();
+  if(name==='explore'){fitHeadline();attachOpen()}
+  window.scrollTo(0,0);
+}
+function openItem(id){
+  var it=byId(id);
+  state.kind=it.kind;state.goal='todos';state.level=0;state.q='';state.open=id;
+  syncControls();setHeadline('todos',true);renderList();switchTab('explore');
+  var el=document.getElementById('it-'+id);
+  if(el) setTimeout(function(){el.scrollIntoView({block:'start',behavior:REDUCE?'auto':'smooth'})},60);
+}
+
+/* ---------- Events (explore) ---------- */
+$('#goalChips').addEventListener('click',function(e){
+  var b=e.target.closest('[data-goal]');if(!b)return;
+  state.goal=b.dataset.goal;state.open=null;
+  syncControls();setHeadline(state.goal);renderList();
+});
+$('#levelPills').addEventListener('click',function(e){
+  var b=e.target.closest('[data-level]');if(!b)return;
+  state.level=Number(b.dataset.level);state.open=null;syncControls();renderList();
+});
+$('.seg').addEventListener('click',function(e){
+  var b=e.target.closest('[data-kind]');if(!b)return;
+  state.kind=b.dataset.kind;state.open=null;syncControls();renderList();
+});
+$('#q').addEventListener('input',function(e){state.q=e.target.value;state.open=null;renderList()});
+$('#list').addEventListener('click',function(e){
+  if(e.target.closest('[data-demo]')){Demo.toggle();return}
+  var sv=e.target.closest('[data-save]');if(sv){toggleSave(sv.dataset.save);return}
+  var cl=e.target.closest('[data-clear]');
+  if(cl){state.goal='todos';state.level=0;state.q='';syncControls();setHeadline('todos');renderList();return}
+  var hd=e.target.closest('.item-head');
+  if(hd){var id=hd.closest('.item').dataset.id;setOpen(id,state.open!==id)}
+});
+$('#view-plan').addEventListener('click',function(e){
+  var t;
+  if((t=e.target.closest('[data-done]'))){
+    var id=t.dataset.done,i=state.done.ids.indexOf(id);
+    if(i>-1)state.done.ids.splice(i,1);else state.done.ids.push(id);
+    saveDone();renderPlan();return;
+  }
+  if((t=e.target.closest('[data-remove]'))){toggleSave(t.dataset.remove);return}
+  if((t=e.target.closest('[data-view]'))){openItem(t.dataset.view);return}
+  if((t=e.target.closest('[data-go]'))){switchTab(t.dataset.go)}
+});
+$$('.tab').forEach(function(b){b.addEventListener('click',function(){switchTab(b.dataset.tab)})});
+
+/* ---------- Timer ---------- */
+var PRESETS=[
+  {n:'Iniciante',w:20,r:40,k:6},
+  {n:'Equilibrado',w:30,r:30,k:8},
+  {n:'HIIT',w:40,r:20,k:8}
+];
+var saved=store.get('mexe:timer',{work:30,rest:30,rounds:6,sound:true});
+var T={work:saved.work||30,rest:(saved.rest===0?0:(saved.rest||30)),rounds:saved.rounds||6,sound:saved.sound!==false,
+  phase:'idle',round:1,left:0,total:0,running:false,last:0,id:0,lastSec:null};
+var C=603.19, ac=null, wake=null;
+
+function saveTimer(){store.set('mexe:timer',{work:T.work,rest:T.rest,rounds:T.rounds,sound:T.sound})}
+function ensureAudio(){
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}catch(e){}
+}
+function beep(kind){
+  if(!T.sound) return;
+  try{
+    ensureAudio(); if(!ac) return;
+    var o=ac.createOscillator(), g=ac.createGain(), f={work:880,rest:520,tick:660,done:988}[kind]||660;
+    o.type='sine';o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.25,ac.currentTime+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+(kind==='tick'?0.12:0.45));
+    o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+0.5);
+  }catch(e){}
+  if(kind!=='tick'){try{if(navigator.vibrate)navigator.vibrate(kind==='done'?[200,100,200]:120)}catch(e){}}
+}
+function setPhase(p){
+  T.phase=p;T.lastSec=null;
+  T.total = p==='prep'?3000 : p==='work'?T.work*1000 : p==='rest'?T.rest*1000 : 0;
+  T.left=T.total;
+  var say={prep:'Prepara-te',work:'Trabalho. Ronda '+T.round,rest:'Descanso',done:'Treino terminado'}[p];
+  if(say) $('#tLive').textContent=say;
+}
+function releaseWake(){try{if(wake){wake.release();wake=null}}catch(e){}}
+function finish(){
+  T.running=false;clearInterval(T.id);setPhase('done');beep('done');releaseWake();
+}
+function nextPhase(){
+  if(T.phase==='prep'){setPhase('work');beep('work')}
+  else if(T.phase==='work'){
+    if(T.round>=T.rounds){finish();return}
+    if(T.rest>0){setPhase('rest');beep('rest')}
+    else{T.round++;setPhase('work');beep('work')}
+  } else if(T.phase==='rest'){T.round++;setPhase('work');beep('work')}
+}
+function tick(){
+  var now=performance.now();T.left-=now-T.last;T.last=now;
+  while(T.running && T.left<=0 && T.phase!=='done'){
+    var over=-T.left;nextPhase();
+    if(T.phase==='done')break;
+    T.left-=over;
+  }
+  if(T.phase!=='done'&&T.phase!=='idle'){
+    var sec=Math.ceil(T.left/1000);
+    if(sec>0&&sec<=3&&sec!==T.lastSec){T.lastSec=sec;beep('tick')}
+  }
+  renderTimer();
+}
+function startPause(){
+  ensureAudio();
+  if(T.running){T.running=false;clearInterval(T.id);releaseWake();renderTimer();return}
+  if(T.phase==='idle'||T.phase==='done'){T.round=1;setPhase('prep')}
+  T.running=true;T.last=performance.now();
+  clearInterval(T.id);T.id=setInterval(tick,100);
+  try{if(navigator.wakeLock&&navigator.wakeLock.request){navigator.wakeLock.request('screen').then(function(l){wake=l}).catch(function(){})}}catch(e){}
+  renderTimer();
+}
+function resetTimer(){
+  T.running=false;clearInterval(T.id);releaseWake();
+  T.phase='idle';T.round=1;T.total=T.work*1000;T.left=T.total;T.lastSec=null;
+  $('#tLive').textContent='';renderTimer();
+}
+function fmt(ms){var s=Math.max(0,Math.ceil(ms/1000));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+
+function renderTimer(){
+  var p=T.phase, panel=$('#timerPanel');
+  panel.dataset.phase=p;
+  var label={idle:'Pronto',prep:'Prepara-te',work:'Trabalho',rest:'Descanso',done:'Terminado'}[p];
+  $('#tPhase').textContent=label;
+  var left = p==='idle' ? T.work*1000 : p==='done' ? 0 : T.left;
+  $('#tTime').textContent=fmt(left);
+  $('#tRound').textContent = (p==='idle') ? T.rounds+(T.rounds===1?' ronda':' rondas') :
+    (p==='done') ? T.rounds+' rondas feitas' :
+    (p==='prep') ? 'Ronda 1 de '+T.rounds : 'Ronda '+T.round+' de '+T.rounds;
+  var frac = (p==='idle') ? 1 : (p==='done') ? 0 : (T.total? Math.max(0,Math.min(1,T.left/T.total)) : 0);
+  $('#ringBar').style.strokeDashoffset=(C*(1-frac)).toFixed(2);
+  var st=$('#tStart');
+  st.textContent = T.running ? 'Pausar' : (p==='idle'?'Começar':(p==='done'?'Começar de novo':'Continuar'));
+  var locked = (p!=='idle'&&p!=='done');
+  $$('#steppers .step-btn, #presets .preset').forEach(function(b){b.disabled=locked});
+  var lim={work:[5,180],rest:[0,180],rounds:[1,20]};
+  $$('#steppers .step-btn').forEach(function(b){
+    var k=b.dataset.k,d=Number(b.dataset.d);
+    if(!locked) b.disabled = (T[k]+d<lim[k][0]) || (T[k]+d>lim[k][1]);
+  });
+  $('#vWork').textContent=T.work+' s';
+  $('#vRest').textContent=T.rest+' s';
+  $('#vRounds').textContent=T.rounds;
+  $$('#presets .preset').forEach(function(b){
+    var pr=PRESETS[Number(b.dataset.p)];
+    b.setAttribute('aria-pressed',String(pr.w===T.work&&pr.r===T.rest&&pr.k===T.rounds));
+  });
+  $('#soundSw').setAttribute('aria-checked',String(T.sound));
+}
+function buildTimerControls(){
+  $('#presets').innerHTML=PRESETS.map(function(p,i){
+    return '<button type="button" class="preset" data-p="'+i+'" aria-pressed="false"><b>'+p.n+'</b><small>'+p.w+' s / '+p.r+' s, '+p.k+'x</small></button>';
+  }).join('');
+  function row(label,id,k,step){
+    return '<div class="stepper"><span class="lab">'+label+'</span><span class="ctl">'+
+      '<button type="button" class="step-btn" data-k="'+k+'" data-d="-'+step+'" aria-label="Diminuir '+label.toLowerCase()+'">−</button>'+
+      '<span class="val" id="'+id+'" aria-live="polite"></span>'+
+      '<button type="button" class="step-btn" data-k="'+k+'" data-d="'+step+'" aria-label="Aumentar '+label.toLowerCase()+'">+</button>'+
+    '</span></div>';
+  }
+  $('#steppers').innerHTML=row('Trabalho','vWork','work',5)+row('Descanso','vRest','rest',5)+row('Rondas','vRounds','rounds',1);
+}
+$('#presets').addEventListener('click',function(e){
+  var b=e.target.closest('[data-p]');if(!b||b.disabled)return;
+  var p=PRESETS[Number(b.dataset.p)];T.work=p.w;T.rest=p.r;T.rounds=p.k;saveTimer();resetTimer();
+});
+$('#steppers').addEventListener('click',function(e){
+  var b=e.target.closest('.step-btn');if(!b||b.disabled)return;
+  var lim={work:[5,180],rest:[0,180],rounds:[1,20]}, k=b.dataset.k;
+  T[k]=Math.max(lim[k][0],Math.min(lim[k][1],T[k]+Number(b.dataset.d)));
+  saveTimer();resetTimer();
+});
+$('#tStart').addEventListener('click',startPause);
+$('#tReset').addEventListener('click',resetTimer);
+$('#soundSw').addEventListener('click',function(){T.sound=!T.sound;saveTimer();renderTimer();if(T.sound){ensureAudio();beep('tick')}});
+document.addEventListener('visibilitychange',function(){if(T.running)T.last=performance.now()});
+
+/* ---------- Init ---------- */
+buildChips();
+buildTimerControls();
+resetTimer();
+syncControls();
+renderList();
+updateBadge();
+applyHL(hlCur.wdth,hlCur.wght);
+setHeadline('todos');
+window.addEventListener('resize',fitHeadline);
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fitHeadline)}
+})();
+</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+</body>
+</html>
